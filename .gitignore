@@ -1,0 +1,26 @@
+﻿# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build files
+dist/
+build/
+*.exe
+*.node
+
+# Large media files
+Frontend/public/*.jpg
+Frontend/public/*.png
+Frontend/public/*.gif
+Frontend/public/*.mp4
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
