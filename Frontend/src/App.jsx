@@ -10,6 +10,7 @@ const HomePage = lazy(() => import('./pages/Home'));
 const Categories = lazy(() => import('./pages/Categories'));
 const MensProducts = lazy(() => import('./pages/MensProducts'));
 const WomensProducts = lazy(() => import('./pages/WomensProducts'));
+const About = lazy(() => import('./pages/About'));
 
 // Loading spinner component
 const LoadingSpinner = () => (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/categories" element={<Userlayout><Categories /></Userlayout>} />
             <Route path="/men" element={<Userlayout><MensProducts /></Userlayout>} />
             <Route path="/women" element={<Userlayout><WomensProducts /></Userlayout>} />
+            <Route path="/about" element={<Userlayout><About /></Userlayout>} />
             {/* Catch all route for 404 */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

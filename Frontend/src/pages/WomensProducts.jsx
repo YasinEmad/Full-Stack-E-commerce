@@ -1,73 +1,34 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Filter, X, Star } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Filter, Star } from 'lucide-react';
 import ProductCard from '../componentes/Products/ProductCard';
+import { useProductFilters } from '../hooks/useProductFilters';
+import { products } from '../data/products';
+
+const brands = [
+  'Nike', 'Adidas', 'Zara', 'H&M', 'Gucci', 'Prada', 'Calvin Klein', 
+  'Tommy Hilfiger', 'Ralph Lauren', 'Levi\'s', 'Uniqlo'
+];
 
 const WomensProducts = () => {
-  const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [selectedRating, setSelectedRating] = useState(0);
-  const [sortBy, setSortBy] = useState('name');
-  const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-
-  const brands = [
-    'Nike', 'Adidas', 'Zara', 'H&M', 'Gucci', 'Prada', 'Calvin Klein', 
-    'Tommy Hilfiger', 'Ralph Lauren', 'Levi\'s', 'Uniqlo'
-  ];
-
-  const products = useMemo(() => [
-    // Women's Fashion products
-    { id: 6, name: 'Elegant Evening Dress', category: 'womens', price: 159, brand: 'Zara', rating: 4.7, image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=300', inStock: true, sale: false },
-    { id: 7, name: 'Floral Summer Blouse', category: 'womens', price: 42, brand: 'H&M', rating: 4.1, image: 'https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=300', inStock: true, sale: true },
-    { id: 8, name: 'High-Waisted Jeans', category: 'womens', price: 78, brand: 'Levi\'s', rating: 4.5, image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300', inStock: true, sale: false },
-    { id: 9, name: 'Silk Scarf Collection', category: 'womens', price: 95, brand: 'Gucci', rating: 4.9, image: 'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=300', inStock: true, sale: false },
-    { id: 10, name: 'Knit Cardigan', category: 'womens', price: 68, brand: 'Uniqlo', rating: 4.4, image: 'https://images.unsplash.com/photo-1566479179817-0ea4be07a59b?w=300', inStock: false, sale: false },
-    // Add more women's products as needed
-  ], []);
-
-  const filteredProducts = useMemo(() => {
-    let filtered = products;
-
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter(product => 
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.brand.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Filter by price range
-    filtered = filtered.filter(product => 
-      product.price >= priceRange[0] && product.price <= priceRange[1]
-    );
-
-    // Filter by brands
-    if (selectedBrands.length > 0) {
-      filtered = filtered.filter(product => selectedBrands.includes(product.brand));
-    }
-
-    // Filter by rating
-    if (selectedRating > 0) {
-      filtered = filtered.filter(product => product.rating >= selectedRating);
-    }
-
-    // Sort products
-    switch (sortBy) {
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        filtered.sort((a, b) => b.rating - a.rating);
-        break;
-      default:
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    return filtered;
-  }, [products, searchQuery, priceRange, selectedBrands, selectedRating, sortBy]);
+  
+  const {
+    filters: {
+      priceRange,
+      selectedBrands,
+      selectedRating,
+      sortBy,
+      searchQuery
+    },
+    updateFilters: {
+      updatePriceRange: setPriceRange,
+      updateSelectedBrands: setSelectedBrands,
+      updateRating: setSelectedRating,
+      updateSortBy: setSortBy,
+      updateSearchQuery: setSearchQuery
+    },
+    paginatedProducts: filteredProducts
+  } = useProductFilters(products.womens);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -123,7 +84,7 @@ const WomensProducts = () => {
                   min="0"
                   max="1000"
                   value={priceRange[1]}
-                  onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                  onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
                   className="w-full"
                 />
                 <span>${priceRange[1]}</span>

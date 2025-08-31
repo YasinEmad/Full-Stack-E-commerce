@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Search, Filter, Star } from 'lucide-react';
 import ProductCard from '../componentes/Products/ProductCard';
 import { products } from '../data/products';
+import { useProductFilters } from '../hooks/useProductFilters';
 
 const brands = [
   'Nike', 'Adidas', 'Zara', 'H&M', 'Gucci', 'Prada', 'Calvin Klein', 
@@ -9,63 +10,25 @@ const brands = [
 ];
 
 const MensProducts = () => {
-  const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [selectedRating, setSelectedRating] = useState(0);
-  const [sortBy, setSortBy] = useState('name');
-  const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-
-  // Use the men's products from the imported data
-  const mensProducts = useMemo(() => products.mens, []);
-
-  const filteredProducts = useMemo(() => {
-    let filtered = [...mensProducts];
-
-    // Filter by search query
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(product => 
-        product.name.toLowerCase().includes(query) ||
-        product.brand.toLowerCase().includes(query)
-      );
-    }
-
-    // Filter by price range
-    filtered = filtered.filter(product => 
-      product.price >= priceRange[0] && product.price <= priceRange[1]
-    );
-
-    // Filter by brands
-    if (selectedBrands.length > 0) {
-      filtered = filtered.filter(product => selectedBrands.includes(product.brand));
-    }
-
-    // Filter by rating
-    if (selectedRating > 0) {
-      filtered = filtered.filter(product => product.rating >= selectedRating);
-    }
-
-    // Create a new array for sorting to avoid mutating the filtered array
-    const sortedProducts = [...filtered];
-
-    // Sort products
-    switch (sortBy) {
-      case 'price-low':
-        sortedProducts.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        sortedProducts.sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        sortedProducts.sort((a, b) => b.rating - a.rating);
-        break;
-      default:
-        sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    return sortedProducts;
-  }, [mensProducts, searchQuery, priceRange, selectedBrands, selectedRating, sortBy]);
+  
+  const {
+    filters: {
+      priceRange,
+      selectedBrands,
+      selectedRating,
+      sortBy,
+      searchQuery
+    },
+    updateFilters: {
+      updatePriceRange: setPriceRange,
+      updateSelectedBrands: setSelectedBrands,
+      updateRating: setSelectedRating,
+      updateSortBy: setSortBy,
+      updateSearchQuery: setSearchQuery
+    },
+    paginatedProducts: filteredProducts
+  } = useProductFilters(products.mens);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -121,7 +84,7 @@ const MensProducts = () => {
                   min="0"
                   max="1000"
                   value={priceRange[1]}
-                  onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                  onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
                   className="w-full"
                 />
                 <span>${priceRange[1]}</span>
