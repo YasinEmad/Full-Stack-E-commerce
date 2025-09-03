@@ -1,7 +1,10 @@
 // ProductCard.jsx
 import React from 'react';
+import { useCart } from '../../context/CartContext';
 
 const ProductCard = ({ product }) => {
+  const { addToCart } = useCart();
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
       {/* Product Image */}
@@ -29,7 +32,10 @@ const ProductCard = ({ product }) => {
         <p className="text-gray-600">${product.price.toFixed(2)}</p>
 
         {/* Add to Cart Button */}
-        <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200">
+        <button 
+          onClick={() => addToCart(product)}
+          className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200"
+        >
           Add to Cart
         </button>
       </div>

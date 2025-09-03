@@ -9,14 +9,13 @@ import {
   Sparkles,
   User
 } from 'lucide-react';
-
-// Local Components (assuming these exist)
-// import CartDrawer from '../Cart/CartDrawer'; 
+import { useCart } from '../../context/CartContext';
+import CartDrawer from '../Cart/CartDrawer'; 
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { cartItems, isCartOpen, openCart, closeCart } = useCart();
 
   // Handle scroll effect
   useEffect(() => {
@@ -29,10 +28,6 @@ const Navbar = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const toggleCartDrawer = () => {
-    setIsCartDrawerOpen(!isCartDrawerOpen);
   };
 
   const navItems = [
@@ -116,13 +111,13 @@ const Navbar = () => {
 
               {/* Cart Button */}
               <button
-                onClick={toggleCartDrawer}
+                onClick={openCart}
                 className="relative flex items-center justify-center w-10 h-10 rounded-xl text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200 group"
                 aria-label="Open cart"
               >
                 <ShoppingBag className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs rounded-full flex items-center justify-center font-medium group-hover:scale-110 transition-transform">
-                  0
+                  {cartItems.length}
                 </span>
               </button>
 
@@ -184,8 +179,7 @@ const Navbar = () => {
       {/* Spacer to prevent content from hiding behind fixed navbar */}
       <div className="h-12 lg:h-14"></div>
 
-      {/* Cart Drawer Component (you'll need to uncomment this when you have the component) */}
-      {/* <CartDrawer isOpen={isCartDrawerOpen} onClose={toggleCartDrawer} /> */}
+      <CartDrawer isOpen={isCartOpen} onClose={closeCart} />
     </>
   );
 };

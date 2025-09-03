@@ -1,14 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, X, Star } from 'lucide-react';
+import { Search, Filter, Star } from 'lucide-react';
+import { useProductFilters } from '../hooks/useProductFilters';
 import ProductCard from '../componentes/Products/ProductCard';
 
 const CategoriesAndProducts = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [selectedRating, setSelectedRating] = useState(0);
-  const [sortBy, setSortBy] = useState('name');
-  const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
   const categories = [
@@ -27,7 +23,7 @@ const CategoriesAndProducts = () => {
     'Tommy Hilfiger', 'Ralph Lauren', 'Levi\'s', 'Uniqlo', 'Forever 21'
   ];
 
-  const products = useMemo(() => [
+  const allProducts = useMemo(() => [
     // Men's Fashion
     { id: 1, name: 'Classic Blue Denim Jacket', category: 'mens', price: 89, brand: 'Levi\'s', rating: 4.5, image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300', inStock: true, sale: false },
     { id: 2, name: 'Wool Blend Overcoat', category: 'mens', price: 199, brand: 'Ralph Lauren', rating: 4.8, image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300', inStock: true, sale: true },
@@ -75,69 +71,34 @@ const CategoriesAndProducts = () => {
     { id: 32, name: 'Winter Boots', category: 'footwear', price: 135, brand: 'Levi\'s', rating: 4.7, image: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5d?w=300', inStock: true, sale: false }
   ], []);
 
-  const filteredProducts = useMemo(() => {
-    let filtered = products;
+  // Filter products by category first, then use the custom hook
+  const categoryFilteredProducts = useMemo(() => {
+    if (selectedCategory === 'all') return allProducts;
+    return allProducts.filter(product => product.category === selectedCategory);
+  }, [allProducts, selectedCategory]);
 
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => product.category === selectedCategory);
-    }
-
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter(product => 
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.brand.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Filter by price range
-    filtered = filtered.filter(product => 
-      product.price >= priceRange[0] && product.price <= priceRange[1]
-    );
-
-    // Filter by brands
-    if (selectedBrands.length > 0) {
-      filtered = filtered.filter(product => selectedBrands.includes(product.brand));
-    }
-
-    // Filter by rating
-    if (selectedRating > 0) {
-      filtered = filtered.filter(product => product.rating >= selectedRating);
-    }
-
-    // Sort products
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'price-low':
-          return a.price - b.price;
-        case 'price-high':
-          return b.price - a.price;
-        case 'rating':
-          return b.rating - a.rating;
-        case 'name':
-        default:
-          return a.name.localeCompare(b.name);
-      }
-    });
-
-    return filtered;
-  }, [selectedCategory, searchQuery, priceRange, selectedBrands, selectedRating, sortBy, products]);
+  // Use the custom hook for other filters
+  const {
+    filters,
+    updateFilters,
+    paginatedProducts,
+    totalPages
+  } = useProductFilters(categoryFilteredProducts);
 
   const handleBrandChange = (brand) => {
-    setSelectedBrands(prev => 
-      prev.includes(brand) 
-        ? prev.filter(b => b !== brand)
-        : [...prev, brand]
-    );
+    const newBrands = filters.selectedBrands.includes(brand) 
+      ? filters.selectedBrands.filter(b => b !== brand)
+      : [...filters.selectedBrands, brand];
+    updateFilters.updateSelectedBrands(newBrands);
   };
 
   const clearFilters = () => {
     setSelectedCategory('all');
-    setPriceRange([0, 1000]);
-    setSelectedBrands([]);
-    setSelectedRating(0);
-    setSearchQuery('');
+    updateFilters.updatePriceRange([0, 1000]);
+    updateFilters.updateSelectedBrands([]);
+    updateFilters.updateRating(0);
+    updateFilters.updateSearchQuery('');
+    updateFilters.updatePage(1);
   };
 
   const renderStars = (rating) => {
@@ -147,6 +108,45 @@ const CategoriesAndProducts = () => {
         className={`w-4 h-4 ${i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
       />
     ));
+  };
+
+  // Pagination component
+  const Pagination = () => {
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="flex justify-center items-center space-x-2 mt-8">
+        <button
+          onClick={() => updateFilters.updatePage(filters.page - 1)}
+          disabled={filters.page === 1}
+          className="px-3 py-2 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+        >
+          Previous
+        </button>
+        
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+          <button
+            key={page}
+            onClick={() => updateFilters.updatePage(page)}
+            className={`px-3 py-2 text-sm border rounded-md ${
+              filters.page === page
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            {page}
+          </button>
+        ))}
+        
+        <button
+          onClick={() => updateFilters.updatePage(filters.page + 1)}
+          disabled={filters.page === totalPages}
+          className="px-3 py-2 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+        >
+          Next
+        </button>
+      </div>
+    );
   };
 
   return (
@@ -166,16 +166,16 @@ const CategoriesAndProducts = () => {
                 <input
                   type="text"
                   placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  value={filters.searchQuery}
+                  onChange={(e) => updateFilters.updateSearchQuery(e.target.value)}
                   className="pl-10 pr-4 py-2 w-full sm:w-80 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               
               {/* Sort */}
               <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
+                value={filters.sortBy}
+                onChange={(e) => updateFilters.updateSortBy(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="name">Sort by Name</option>
@@ -241,16 +241,16 @@ const CategoriesAndProducts = () => {
                     <input
                       type="number"
                       placeholder="Min"
-                      value={priceRange[0]}
-                      onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
+                      value={filters.priceRange[0]}
+                      onChange={(e) => updateFilters.updatePriceRange([Number(e.target.value), filters.priceRange[1]])}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <span className="text-gray-500">to</span>
                     <input
                       type="number"
                       placeholder="Max"
-                      value={priceRange[1]}
-                      onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+                      value={filters.priceRange[1]}
+                      onChange={(e) => updateFilters.updatePriceRange([filters.priceRange[0], Number(e.target.value)])}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
@@ -265,7 +265,7 @@ const CategoriesAndProducts = () => {
                     <label key={brand} className="flex items-center">
                       <input
                         type="checkbox"
-                        checked={selectedBrands.includes(brand)}
+                        checked={filters.selectedBrands.includes(brand)}
                         onChange={() => handleBrandChange(brand)}
                         className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
@@ -282,9 +282,9 @@ const CategoriesAndProducts = () => {
                   {[4, 3, 2, 1].map((rating) => (
                     <button
                       key={rating}
-                      onClick={() => setSelectedRating(selectedRating === rating ? 0 : rating)}
+                      onClick={() => updateFilters.updateRating(filters.selectedRating === rating ? 0 : rating)}
                       className={`flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                        selectedRating === rating
+                        filters.selectedRating === rating
                           ? 'bg-blue-50 text-blue-700 border border-blue-200'
                           : 'text-gray-700 hover:bg-gray-100'
                       }`}
@@ -304,7 +304,16 @@ const CategoriesAndProducts = () => {
           <div className="flex-1">
             <div className="mb-6">
               <p className="text-gray-600">
-                Showing {filteredProducts.length} products
+                Showing {paginatedProducts.length} of {categoryFilteredProducts.filter(product => {
+                  const query = filters.searchQuery.toLowerCase();
+                  return (!filters.searchQuery || 
+                    product.name.toLowerCase().includes(query) ||
+                    product.brand.toLowerCase().includes(query)) &&
+                    product.price >= filters.priceRange[0] && 
+                    product.price <= filters.priceRange[1] &&
+                    (filters.selectedBrands.length === 0 || filters.selectedBrands.includes(product.brand)) &&
+                    (filters.selectedRating === 0 || product.rating >= filters.selectedRating);
+                }).length} products
                 {selectedCategory !== 'all' && (
                   <span> in {categories.find(c => c.id === selectedCategory)?.name}</span>
                 )}
@@ -312,12 +321,12 @@ const CategoriesAndProducts = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
+              {paginatedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
 
-            {filteredProducts.length === 0 && (
+            {paginatedProducts.length === 0 && (
               <div className="text-center py-12">
                 <div className="text-gray-500 mb-4">
                   <Search className="w-16 h-16 mx-auto mb-4 opacity-50" />
@@ -332,6 +341,8 @@ const CategoriesAndProducts = () => {
                 </button>
               </div>
             )}
+
+            <Pagination />
           </div>
         </div>
       </div>
