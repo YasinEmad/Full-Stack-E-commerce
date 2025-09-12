@@ -1,6 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const CollectionsSection = () => {
+const CollectionsSection = () => {const navigate = useNavigate();
   return (
     <div className="container mx-auto px-4 py-16">
       <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 text-gray-800">
@@ -18,7 +19,9 @@ const CollectionsSection = () => {
             <div className="text-center text-white">
               <h3 className="text-4xl font-bold mb-2">Women's Collection</h3>
               <p className="text-lg mb-4">Discover the latest trends</p>
-              <button className="border-2 border-white text-white font-semibold py-2 px-6 rounded-full hover:bg-white hover:text-black transition duration-300">
+              <button 
+                onClick={() => navigate('/women')}
+                className="border-2 border-white text-white font-semibold py-2 px-6 rounded-full hover:bg-white hover:text-black transition duration-300">
                 Shop Women
               </button>
             </div>
@@ -36,7 +39,9 @@ const CollectionsSection = () => {
             <div className="text-center text-white">
               <h3 className="text-4xl font-bold mb-2">Men's Collection</h3>
               <p className="text-lg mb-4">Step up your style game</p>
-              <button className="border-2 border-white text-white font-semibold py-2 px-6 rounded-full hover:bg-white hover:text-black transition duration-300">
+              <button 
+               onClick={() => navigate('/men')}
+               className="border-2 border-white text-white font-semibold py-2 px-6 rounded-full hover:bg-white hover:text-black transition duration-300">
                 Shop Men
               </button>
             </div>
@@ -46,5 +51,6 @@ const CollectionsSection = () => {
     </div>
   );
 };
+
 
 export default CollectionsSection;

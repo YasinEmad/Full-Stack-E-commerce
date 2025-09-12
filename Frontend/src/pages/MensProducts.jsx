@@ -11,7 +11,7 @@ const brands = [
 
 const MensProducts = () => {
   const [showFilters, setShowFilters] = useState(false);
-  
+
   const {
     filters: {
       priceRange,
@@ -147,7 +147,10 @@ const MensProducts = () => {
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            key={product.id}
+            product={product}
+          />
         ))}
       </div>
     </div>
