@@ -12,6 +12,10 @@ const MensProducts = lazy(() => import('./pages/MensProducts'));
 const WomensProducts = lazy(() => import('./pages/WomensProducts'));
 const About = lazy(() => import('./pages/About'));
 
+// Admin pages (hidden)
+const AdminLogin = lazy(() => import('./pages/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+
 // Loading spinner component
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -30,6 +34,9 @@ function App() {
             <Route path="/men" element={<Userlayout><MensProducts /></Userlayout>} />
             <Route path="/women" element={<Userlayout><WomensProducts /></Userlayout>} />
             <Route path="/about" element={<Userlayout><About /></Userlayout>} />
+              {/* Hidden admin routes, not in navbar */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
             {/* Catch all route for 404 */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

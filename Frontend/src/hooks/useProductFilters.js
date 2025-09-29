@@ -22,6 +22,7 @@ export const useProductFilters = (initialProducts) => {
   );
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'name');
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
+  const [showInStockOnly, setShowInStockOnly] = useState(searchParams.get('inStock') === 'true');
   const [page, setPage] = useState(parseInt(searchParams.get('page') || '1'));
   const productsPerPage = 12;
 
@@ -61,8 +62,9 @@ export const useProductFilters = (initialProducts) => {
       );
     }
 
+    // Filter by price range
     filtered = filtered.filter(product => 
-      product.price >= priceRange[0] && product.price <= priceRange[1]
+      Number(product.price) >= priceRange[0] && Number(product.price) <= priceRange[1]
     );
 
     if (selectedBrands.length > 0) {
@@ -71,6 +73,10 @@ export const useProductFilters = (initialProducts) => {
 
     if (selectedRating > 0) {
       filtered = filtered.filter(product => product.rating >= selectedRating);
+    }
+
+    if (showInStockOnly) {
+      filtered = filtered.filter(product => product.inStock);
     }
 
     // Sort products
@@ -90,7 +96,7 @@ export const useProductFilters = (initialProducts) => {
     }
 
     return sortedProducts;
-  }, [cachedProducts, debouncedSearchQuery, priceRange, selectedBrands, selectedRating, sortBy]);
+  }, [cachedProducts, debouncedSearchQuery, priceRange, selectedBrands, selectedRating, sortBy, showInStockOnly]);
 
   // Get paginated products
   const paginatedProducts = useMemo(() => {
@@ -130,6 +136,11 @@ export const useProductFilters = (initialProducts) => {
     updateSearchParams({ page: newPage.toString() });
   }, [updateSearchParams]);
 
+  const updateInStockOnly = useCallback((inStock) => {
+    setShowInStockOnly(inStock);
+    updateSearchParams({ inStock: inStock.toString() });
+  }, [updateSearchParams]);
+
   return {
     filters: {
       priceRange,
@@ -137,6 +148,7 @@ export const useProductFilters = (initialProducts) => {
       selectedRating,
       sortBy,
       searchQuery,
+      showInStockOnly,
       page,
       productsPerPage
     },
@@ -146,6 +158,7 @@ export const useProductFilters = (initialProducts) => {
       updateRating,
       updateSortBy,
       updateSearchQuery,
+      updateInStockOnly,
       updatePage
     },
     filteredProducts,

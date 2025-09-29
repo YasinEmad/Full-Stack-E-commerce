@@ -5,6 +5,24 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    hmr: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true
+      }
+    },
+    optimizeDeps: {
+      include: [
+        'react', 
+        'react-dom', 
+        'react-router-dom', 
+        'lucide-react',
+        'react-lazy-load-image-component'
+      ],
+    },
+  },
   plugins: [
     tailwindcss(),
     react(),
@@ -63,18 +81,6 @@ export default defineConfig({
     sourcemap: true,
     // Optimize chunks
     chunkSizeWarningLimit: 500,
-  },
-  server: {
-    hmr: true,
-    optimizeDeps: {
-      include: [
-        'react', 
-        'react-dom', 
-        'react-router-dom', 
-        'lucide-react',
-        'react-lazy-load-image-component'
-      ],
-    },
   },
   optimizeDeps: {
     exclude: ['vite-plugin-pwa']
