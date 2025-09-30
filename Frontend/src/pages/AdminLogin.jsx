@@ -17,8 +17,8 @@ export default function AdminLogin() {
         body: JSON.stringify({ username, password })
       });
       const data = await res.json();
-      if (res.ok && data.token) {
-        localStorage.setItem('adminToken', data.token);
+      if (res.ok) {
+        // The token will be set as an HTTP-only cookie by the backend
         navigate('/admin/dashboard');
       } else {
         setError(data.error || 'Login failed');

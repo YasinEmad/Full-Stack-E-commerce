@@ -1,12 +1,19 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 
 const app = express();
 
-// Enable CORS for all routes
-app.use(cors());
+// Enable CORS for all routes with credentials
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Update this with your frontend URL
+  credentials: true
+}));
+
+// Enable cookie parser
+app.use(cookieParser());
 
 // Connect to DB
 connectDB();
