@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../redux/cartSlice';
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 
 const MensProducts = () => {
@@ -13,6 +15,8 @@ const MensProducts = () => {
   const [brand, setBrand] = useState("all");
   const [saleOnly, setSaleOnly] = useState(false);
   const [maxPrice, setMaxPrice] = useState(300);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -309,6 +313,17 @@ const MensProducts = () => {
                   </div>
 
                   <button
+                    onClick={() =>
+                      dispatch(
+                        addToCart({
+                          id: product._id,
+                          name: product.name,
+                          price: product.price,
+                          image: product.image,
+                          description: product.brand,
+                        })
+                      )
+                    }
                     className={`w-full mt-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
                       product.inStock
                         ? "bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg"

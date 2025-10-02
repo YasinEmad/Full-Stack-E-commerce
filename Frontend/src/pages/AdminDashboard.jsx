@@ -109,6 +109,66 @@ export default function AdminDashboard() {
                 />
               </div>
 
+              {/* New Attribute: Image2 */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Second Image URL
+                </label>
+                <input
+                  type="text"
+                  name="image2"
+                  placeholder="https://example.com/image2.jpg"
+                  value={editingProduct ? editingProduct.image2 : newProduct.image2}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+
+              {/* New Attribute: Image3 */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Third Image URL
+                </label>
+                <input
+                  type="text"
+                  name="image3"
+                  placeholder="https://example.com/image3.jpg"
+                  value={editingProduct ? editingProduct.image3 : newProduct.image3}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+
+              {/* New Attribute: Colors */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Colors
+                </label>
+                <input
+                  type="text"
+                  name="colors"
+                  placeholder="e.g. red, blue, black"
+                  value={editingProduct ? editingProduct.colors : newProduct.colors}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+
+              {/* New Attribute: Description */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  placeholder="Enter product description"
+                  value={editingProduct ? editingProduct.description : newProduct.description}
+                  onChange={handleInputChange}
+                  rows="3"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+
               {/* Checkboxes */}
               <div className="flex gap-6">
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -179,6 +239,12 @@ export default function AdminDashboard() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Brand
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Colors
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Description
+                  </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
@@ -200,6 +266,12 @@ export default function AdminDashboard() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-600">{product.brand}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-600">{product.colors}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-600">{product.description}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button

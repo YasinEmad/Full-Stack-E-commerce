@@ -8,9 +8,10 @@ const app = express();
 
 // Enable CORS for all routes with credentials
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Update this with your frontend URL
+  origin: '*',
   credentials: true
 }));
+
 
 // Enable cookie parser
 app.use(cookieParser());

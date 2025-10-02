@@ -26,9 +26,23 @@ const productSchema = new mongoose.Schema({
         max: 5,
         default: 0
     },
+    description: {
+        type: String,
+        trim: true
+    },
+    colors: {
+        type: [String], // array of colors
+        default: []
+    },
     image: {
         type: String,
         required: true
+    },
+    image2: {
+        type: String
+    },
+    image3: {
+        type: String
     },
     inStock: {
         type: Boolean,

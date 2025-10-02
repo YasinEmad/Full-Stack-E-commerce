@@ -9,19 +9,18 @@ import {
   Sparkles,
   User
 } from 'lucide-react';
-import { useCart } from '../../context/CartContext';
-import CartDrawer from '../Cart/CartDrawer'; 
+import { useSelector, useDispatch } from 'react-redux';
+import { openCart } from '../../redux/cartSlice';
+import CartDrawer from '../Cart/CartDrawer';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { cartItems, isCartOpen, openCart, closeCart } = useCart();
+  const cartItems = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
 
-  // Handle scroll effect
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -31,39 +30,23 @@ const Navbar = () => {
   };
 
   const navItems = [
-    {
-      title: 'Collections',
-      icon: Sparkles,
-      href: '/categories'
-    },
-    {
-      title: 'Men',
-      icon: Shirt,
-      href: '/men'
-    },
-    {
-      title: 'Women',
-      icon: Crown,
-      href: '/women'
-    },
-    {
-      title: 'About',
-      icon: Users,
-      href: '/about'
-    }
+    { title: 'Collections', icon: Sparkles, href: '/categories' },
+    { title: 'Men', icon: Shirt, href: '/men' },
+    { title: 'Women', icon: Crown, href: '/women' },
+    { title: 'About', icon: Users, href: '/about' }
   ];
 
   return (
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-           ? 'bg-white/95 backdrop-blur-lg shadow-lg'
-           : 'bg-white shadow-md'
+          ? 'bg-white/95 backdrop-blur-lg shadow-lg'
+          : 'bg-white shadow-md'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-12 lg:h-14">
 
-            {/* Logo Section */}
+            {/* Logo */}
             <div className="flex items-center">
               <a href="/" className="group flex items-center space-x-3">
                 <div className="relative">
@@ -88,30 +71,27 @@ const Navbar = () => {
               {navItems.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
-                  <div key={index} className="relative group">
-                    <a
-                      href={item.href}
-                      className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200 font-medium"
-                    >
-                      <IconComponent className="w-4 h-4" />
-                      <span>{item.title}</span>
-                    </a>
-                  </div>
+                  <a
+                    key={index}
+                    href={item.href}
+                    className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200 font-medium"
+                  >
+                    <IconComponent className="w-4 h-4" />
+                    <span>{item.title}</span>
+                  </a>
                 );
               })}
             </div>
 
-            {/* Right Section - Account and Cart only */}
+            {/* Right Section */}
             <div className="flex items-center space-x-2">
-              
-              {/* Account - Hidden on mobile */}
               <button className="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200">
                 <User className="w-5 h-5" />
               </button>
 
               {/* Cart Button */}
               <button
-                onClick={openCart}
+                onClick={() => dispatch(openCart())}
                 className="relative flex items-center justify-center w-10 h-10 rounded-xl text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200 group"
                 aria-label="Open cart"
               >
@@ -121,12 +101,10 @@ const Navbar = () => {
                 </span>
               </button>
 
-              {/* Mobile Menu Button */}
+              {/* Mobile Menu */}
               <button
                 onClick={toggleMobileMenu}
                 className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200"
-                aria-controls="mobile-menu"
-                aria-expanded={isMobileMenuOpen}
               >
                 {!isMobileMenuOpen ? (
                   <Menu className="w-5 h-5" />
@@ -137,49 +115,10 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        <div className={`lg:hidden overflow-hidden transition-all duration-300 ${
-          isMobileMenuOpen ? 'max-h-screen bg-white border-t border-gray-100' : 'max-h-0'
-        }`}>
-          <div className="px-4 py-6 space-y-2">
-
-            {/* Mobile Navigation Items */}
-            {navItems.map((item, index) => {
-              const IconComponent = item.icon;
-              return (
-                <div key={index}>
-                  <a
-                    href={item.href}
-                    className="flex items-center space-x-3 px-4 py-4 rounded-xl text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200 font-medium"
-                    onClick={toggleMobileMenu}
-                  >
-                    <IconComponent className="w-5 h-5" />
-                    <span>{item.title}</span>
-                  </a>
-                </div>
-              );
-            })}
-
-            {/* Mobile Account Actions */}
-            <div className="pt-4 border-t border-gray-100 space-y-2">
-              <a
-                href="/account"
-                className="flex items-center space-x-3 px-4 py-4 rounded-xl text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200 font-medium"
-                onClick={toggleMobileMenu}
-              >
-                <User className="w-5 h-5" />
-                <span>My Account</span>
-              </a>
-            </div>
-          </div>
-        </div>
       </nav>
 
-      {/* Spacer to prevent content from hiding behind fixed navbar */}
       <div className="h-12 lg:h-14"></div>
-
-      <CartDrawer isOpen={isCartOpen} onClose={closeCart} />
+      <CartDrawer />
     </>
   );
 };
