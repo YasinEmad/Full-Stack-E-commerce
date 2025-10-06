@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import { addToCart } from '../redux/cartSlice';
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 
@@ -16,6 +17,7 @@ const MensProducts = () => {
   const [saleOnly, setSaleOnly] = useState(false);
   const [maxPrice, setMaxPrice] = useState(300);
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -312,27 +314,35 @@ const MensProducts = () => {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() =>
-                      dispatch(
-                        addToCart({
-                          id: product._id,
-                          name: product.name,
-                          price: product.price,
-                          image: product.image,
-                          description: product.brand,
-                        })
-                      )
-                    }
-                    className={`w-full mt-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                      product.inStock
-                        ? "bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg"
-                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    }`}
-                    disabled={!product.inStock}
-                  >
-                    {product.inStock ? "Add to Cart" : "Out of Stock"}
-                  </button>
+                  <div className="flex mt-4 space-x-2">
+                    <button
+                      onClick={() =>
+                        dispatch(
+                          addToCart({
+                            id: product._id,
+                            name: product.name,
+                            price: product.price,
+                            image: product.image,
+                            description: product.description,
+                          })
+                        )
+                      }
+                      className={`w-1/2 py-3 rounded-xl font-semibold transition-all duration-200 ${
+                        product.inStock
+                          ? "bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg"
+                          : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      }`}
+                      disabled={!product.inStock}
+                    >
+                      {product.inStock ? "Add to Cart" : "Out of Stock"}
+                    </button>
+                    <button
+                      onClick={() => navigate(`/product/${product._id}`)}
+                      className="w-1/2 py-3 rounded-xl font-semibold transition-all duration-200 bg-blue-500 text-white hover:bg-blue-600 hover:shadow-lg"
+                    >
+                      More Details
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

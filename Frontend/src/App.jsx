@@ -11,6 +11,7 @@ const Categories = lazy(() => import('./pages/Categories'));
 const MensProducts = lazy(() => import('./pages/MensProducts'));
 const WomensProducts = lazy(() => import('./pages/WomensProducts'));
 const About = lazy(() => import('./pages/About'));
+const ProductDetails = lazy(() => import('./pages/ProductDetails'));
 
 // Admin pages (hidden)
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
@@ -34,6 +35,7 @@ function App() {
             <Route path="/men" element={<Userlayout><MensProducts /></Userlayout>} />
             <Route path="/women" element={<Userlayout><WomensProducts /></Userlayout>} />
             <Route path="/about" element={<Userlayout><About /></Userlayout>} />
+            <Route path="/product/:id" element={<Userlayout><ProductDetails /></Userlayout>} />
               {/* Hidden admin routes, not in navbar */}
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />

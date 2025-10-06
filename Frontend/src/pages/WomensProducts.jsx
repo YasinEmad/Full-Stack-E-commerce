@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import { addToCart } from '../redux/cartSlice';
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 
 const WomensProducts = () => {
@@ -13,6 +16,9 @@ const WomensProducts = () => {
   const [brand, setBrand] = useState("all");
   const [saleOnly, setSaleOnly] = useState(false);
   const [maxPrice, setMaxPrice] = useState(300);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -65,8 +71,8 @@ const WomensProducts = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading women's products...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Loading premium products...</p>
         </div>
       </div>
     );
@@ -100,7 +106,7 @@ const WomensProducts = () => {
               Women's Collection
             </h1>
             <p className="text-gray-600 text-lg">
-              Explore premium styles designed for women
+              Discover premium products crafted for the modern woman
             </p>
           </div>
 
@@ -112,7 +118,7 @@ const WomensProducts = () => {
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all duration-200"
+              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
             />
           </div>
 
@@ -120,11 +126,11 @@ const WomensProducts = () => {
           <div className="flex justify-center">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-6 py-3 bg-pink-600 text-white rounded-xl hover:bg-pink-500 transition-colors duration-200"
+              className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors duration-200"
             >
               <Filter className="w-4 h-4" />
               Filters
-              <span className="bg-pink-700 text-xs px-2 py-1 rounded-full">
+              <span className="bg-gray-700 text-xs px-2 py-1 rounded-full">
                 {(brand !== "all" ? 1 : 0) +
                   (saleOnly ? 1 : 0) +
                   (maxPrice < 300 ? 1 : 0)}
@@ -147,7 +153,7 @@ const WomensProducts = () => {
                 <select
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all duration-200"
+                  className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                 >
                   <option value="all">All Brands</option>
                   {uniqueBrands.map((b) => (
@@ -168,7 +174,7 @@ const WomensProducts = () => {
                     type="checkbox"
                     checked={saleOnly}
                     onChange={() => setSaleOnly(!saleOnly)}
-                    className="w-5 h-5 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500"
+                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <Tag className="w-4 h-4 text-red-500" />
                   <span className="text-gray-700">On Sale Only</span>
@@ -179,7 +185,7 @@ const WomensProducts = () => {
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Max Price:{" "}
-                  <span className="text-pink-600 font-bold">${maxPrice}</span>
+                  <span className="text-blue-600 font-bold">${maxPrice}</span>
                 </label>
                 <div className="p-3 border border-gray-300 rounded-xl">
                   <input
@@ -244,7 +250,7 @@ const WomensProducts = () => {
                 setMaxPrice(300);
                 setSearchTerm("");
               }}
-              className="text-pink-600 hover:text-pink-700 font-medium"
+              className="text-blue-600 hover:text-blue-700 font-medium"
             >
               Clear all filters
             </button>
@@ -280,7 +286,7 @@ const WomensProducts = () => {
 
                 <div className="p-5">
                   <div className="mb-3">
-                    <h3 className="text-lg font-semibold text-gray-900 line-clamp-1 group-hover:text-pink-600 transition-colors duration-200">
+                    <h3 className="text-lg font-semibold text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors duration-200">
                       {product.name}
                     </h3>
                     <p className="text-sm text-gray-500 font-medium mt-1">
@@ -300,24 +306,43 @@ const WomensProducts = () => {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-1 bg-pink-50 px-2 py-1 rounded-lg">
-                      <Star className="w-4 h-4 text-pink-400 fill-current" />
-                      <span className="text-sm font-semibold text-pink-700">
+                    <div className="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded-lg">
+                      <Star className="w-4 h-4 text-amber-400 fill-current" />
+                      <span className="text-sm font-semibold text-amber-700">
                         {product.rating}
                       </span>
                     </div>
                   </div>
 
-                  <button
-                    className={`w-full mt-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                      product.inStock
-                        ? "bg-pink-600 text-white hover:bg-pink-500 hover:shadow-lg"
-                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    }`}
-                    disabled={!product.inStock}
-                  >
-                    {product.inStock ? "Add to Cart" : "Out of Stock"}
-                  </button>
+                  <div className="flex mt-4 space-x-2">
+                    <button
+                      onClick={() =>
+                        dispatch(
+                          addToCart({
+                            id: product._id,
+                            name: product.name,
+                            price: product.price,
+                            image: product.image,
+                            description: product.description,
+                          })
+                        )
+                      }
+                      className={`w-1/2 py-3 rounded-xl font-semibold transition-all duration-200 ${
+                        product.inStock
+                          ? "bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg"
+                          : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      }`}
+                      disabled={!product.inStock}
+                    >
+                      {product.inStock ? "Add to Cart" : "Out of Stock"}
+                    </button>
+                    <button
+                      onClick={() => navigate(`/product/${product._id}`)}
+                      className="w-1/2 py-3 rounded-xl font-semibold transition-all duration-200 bg-blue-500 text-white hover:bg-blue-600 hover:shadow-lg"
+                    >
+                      More Details
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -331,7 +356,7 @@ const WomensProducts = () => {
           height: 20px;
           width: 20px;
           border-radius: 50%;
-          background: #ec4899;
+          background: #3b82f6;
           cursor: pointer;
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
@@ -340,7 +365,7 @@ const WomensProducts = () => {
           height: 20px;
           width: 20px;
           border-radius: 50%;
-          background: #ec4899;
+          background: #3b82f6;
           cursor: pointer;
           border: none;
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);

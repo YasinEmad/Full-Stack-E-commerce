@@ -42,16 +42,27 @@ const productController = {
         }
     },
 
-    // Get a single product
-    getProduct: async (req, res) => {
-        try {
-            const product = await Product.findById(req.params.id);
-            if (!product) return res.status(404).json({ message: 'Product not found' });
-            res.status(200).json(product);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    },
+   // Get a single product
+getProduct: async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    // Handle malformed colors like ["blue,black"]
+    if (
+      product.colors.length === 1 &&
+      typeof product.colors[0] === 'string' &&
+      product.colors[0].includes(',')
+    ) {
+      product.colors = product.colors[0].split(',').map(color => color.trim());
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+},
+
 
     // Create a new product
     createProduct: async (req, res) => {
