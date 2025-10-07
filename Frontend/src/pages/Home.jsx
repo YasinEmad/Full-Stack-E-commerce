@@ -2,7 +2,6 @@ import Userlayout from '../componentes/Layout/Userlayout';
 import HeroSection from '../componentes/Common/Hero';
 import CollectionsSection from "../componentes/Products/Colliction";
 // import Slider from '../componentes/Products/Slider';
-import BestSellers from '../componentes/Products/BestSellerSection';
 
 // Define the array of images
 // const sliderImages = [
@@ -16,9 +15,6 @@ function HomePage() {
     <Userlayout>
       <HeroSection />
       <CollectionsSection />
-      {/* Pass the sliderImages array as the "images" prop */}
-      {/* <Slider images={sliderImages} /> */}
-      <BestSellers  />
     </Userlayout>
   );
 }

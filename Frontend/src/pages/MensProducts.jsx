@@ -1,72 +1,37 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { addToCart } from '../redux/cartSlice';
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 
-const MensProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
+// Import the custom hook
+import useProducts from '../hooks/useProducts'; // Adjust path as necessary
 
-  // filters
-  const [brand, setBrand] = useState("all");
-  const [saleOnly, setSaleOnly] = useState(false);
-  const [maxPrice, setMaxPrice] = useState(300);
+const MensProducts = () => {
+  // 🚀 Use the custom hook, passing the category to automatically fetch the correct products
+  const {
+    filtered,
+    loading,
+    error,
+    searchTerm,
+    setSearchTerm,
+    brand,
+    setBrand,
+    saleOnly,
+    setSaleOnly,
+    maxPrice,
+    setMaxPrice,
+    uniqueBrands,
+    clearFilters,
+    activeFilterCount,
+  } = useProducts("mens"); // 👈 Pass "mens" as the initial category
+
+  const [showFilters, setShowFilters] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          "http://localhost:5000/api/products?category=mens"
-        );
-        if (!res.ok) throw new Error("Failed to fetch products");
-        const data = await res.json();
-        setProducts(data);
-        setFiltered(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    let temp = [...products];
-
-    // Search filter
-    if (searchTerm) {
-      temp = temp.filter(
-        (p) =>
-          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          p.brand.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Brand filter
-    if (brand !== "all") {
-      temp = temp.filter((p) => p.brand === brand);
-    }
-
-    // Sale filter
-    if (saleOnly) {
-      temp = temp.filter((p) => p.sale === true);
-    }
-
-    // Price filter
-    temp = temp.filter((p) => p.price <= maxPrice);
-
-    setFiltered(temp);
-  }, [brand, saleOnly, maxPrice, products, searchTerm]);
-
+  // --- Loading State ---
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -78,6 +43,7 @@ const MensProducts = () => {
     );
   }
 
+  // --- Error State ---
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -94,8 +60,7 @@ const MensProducts = () => {
     );
   }
 
-  const uniqueBrands = [...new Set(products.map((p) => p.brand))];
-
+  // --- Render (Component logic is now only rendering/UI) ---
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -131,9 +96,7 @@ const MensProducts = () => {
               <Filter className="w-4 h-4" />
               Filters
               <span className="bg-gray-700 text-xs px-2 py-1 rounded-full">
-                {(brand !== "all" ? 1 : 0) +
-                  (saleOnly ? 1 : 0) +
-                  (maxPrice < 300 ? 1 : 0)}
+                {activeFilterCount}
               </span>
             </button>
           </div>
@@ -207,12 +170,7 @@ const MensProducts = () => {
             {/* Clear Filters */}
             <div className="mt-6 pt-6 border-t border-gray-200">
               <button
-                onClick={() => {
-                  setBrand("all");
-                  setSaleOnly(false);
-                  setMaxPrice(300);
-                  setSearchTerm("");
-                }}
+                onClick={clearFilters} // 🚀 Use hook function
                 className="text-gray-500 hover:text-gray-700 font-medium transition-colors duration-200"
               >
                 Clear all filters
@@ -244,12 +202,7 @@ const MensProducts = () => {
               Try adjusting your filters or search terms
             </p>
             <button
-              onClick={() => {
-                setBrand("all");
-                setSaleOnly(false);
-                setMaxPrice(300);
-                setSearchTerm("");
-              }}
+              onClick={clearFilters} // 🚀 Use hook function
               className="text-blue-600 hover:text-blue-700 font-medium"
             >
               Clear all filters

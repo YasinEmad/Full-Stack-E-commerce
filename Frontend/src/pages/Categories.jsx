@@ -1,70 +1,39 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import { addToCart } from '../redux/cartSlice';
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 
+// Import the new custom hook
+import useProducts from '../hooks/useProducts'; // Adjust path as necessary
+
 const AllProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  // Use the custom hook to get all state and logic
+  const {
+    filtered,
+    loading,
+    error,
+    searchTerm,
+    setSearchTerm,
+    brand,
+    setBrand,
+    saleOnly,
+    setSaleOnly,
+    maxPrice,
+    setMaxPrice,
+    category,
+    setCategory,
+    uniqueBrands,
+    uniqueCategories,
+    clearFilters,
+    activeFilterCount,
+  } = useProducts();
+
   const [showFilters, setShowFilters] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // filters
-  const [brand, setBrand] = useState("all");
-  const [saleOnly, setSaleOnly] = useState(false);
-  const [maxPrice, setMaxPrice] = useState(300);
-  const [category, setCategory] = useState("all"); // جديد
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/products");
-        if (!res.ok) throw new Error("Failed to fetch products");
-        const data = await res.json();
-        setProducts(data);
-        setFiltered(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    let temp = [...products];
-
-    // Search filter
-    if (searchTerm) {
-      temp = temp.filter(
-        (p) =>
-          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          p.brand.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Category filter
-    if (category !== "all") {
-      temp = temp.filter((p) => p.category === category);
-    }
-
-    // Brand filter
-    if (brand !== "all") {
-      temp = temp.filter((p) => p.brand === brand);
-    }
-
-    // Sale filter
-    if (saleOnly) {
-      temp = temp.filter((p) => p.sale === true);
-    }
-
-    // Price filter
-    temp = temp.filter((p) => p.price <= maxPrice);
-
-    setFiltered(temp);
-  }, [brand, saleOnly, maxPrice, products, searchTerm, category]);
-
+  // --- Loading and Error States (Unchanged) ---
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -92,9 +61,7 @@ const AllProducts = () => {
     );
   }
 
-  const uniqueBrands = [...new Set(products.map((p) => p.brand))];
-  const uniqueCategories = ["all", ...new Set(products.map((p) => p.category))];
-
+  // --- Render (Simplified) ---
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -130,10 +97,7 @@ const AllProducts = () => {
               <Filter className="w-4 h-4" />
               Filters
               <span className="bg-gray-700 text-xs px-2 py-1 rounded-full">
-                {(brand !== "all" ? 1 : 0) +
-                  (saleOnly ? 1 : 0) +
-                  (maxPrice < 300 ? 1 : 0) +
-                  (category !== "all" ? 1 : 0)}
+                {activeFilterCount}
               </span>
             </button>
           </div>
@@ -225,13 +189,7 @@ const AllProducts = () => {
             {/* Clear Filters */}
             <div className="mt-6 pt-6 border-t border-gray-200">
               <button
-                onClick={() => {
-                  setBrand("all");
-                  setSaleOnly(false);
-                  setMaxPrice(300);
-                  setSearchTerm("");
-                  setCategory("all");
-                }}
+                onClick={clearFilters} // Use the clearFilters function from the hook
                 className="text-gray-500 hover:text-gray-700 font-medium transition-colors duration-200"
               >
                 Clear all filters
@@ -263,13 +221,7 @@ const AllProducts = () => {
               Try adjusting your filters or search terms
             </p>
             <button
-              onClick={() => {
-                setBrand("all");
-                setSaleOnly(false);
-                setMaxPrice(300);
-                setSearchTerm("");
-                setCategory("all");
-              }}
+              onClick={clearFilters} // Use the clearFilters function from the hook
               className="text-blue-600 hover:text-blue-700 font-medium"
             >
               Clear all filters
@@ -334,16 +286,35 @@ const AllProducts = () => {
                     </div>
                   </div>
 
-                  <button
-                    className={`w-full mt-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                      product.inStock
-                        ? "bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg"
-                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    }`}
-                    disabled={!product.inStock}
-                  >
-                    {product.inStock ? "Add to Cart" : "Out of Stock"}
-                  </button>
+                  <div className="flex mt-4 space-x-2">
+                    <button
+                      onClick={() =>
+                        dispatch(
+                          addToCart({
+                            id: product._id,
+                            name: product.name,
+                            price: product.price,
+                            image: product.image,
+                            description: product.description,
+                          })
+                        )
+                      }
+                      className={`w-1/2 py-3 rounded-xl font-semibold transition-all duration-200 ${
+                        product.inStock
+                          ? "bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg"
+                          : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      }`}
+                      disabled={!product.inStock}
+                    >
+                      {product.inStock ? "Add to Cart" : "Out of Stock"}
+                    </button>
+                    <button
+                      onClick={() => navigate(`/product/${product._id}`)}
+                      className="w-1/2 py-3 rounded-xl font-semibold transition-all duration-200 bg-blue-500 text-white hover:bg-blue-600 hover:shadow-lg"
+                    >
+                      More Details
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -377,6 +348,3 @@ const AllProducts = () => {
 };
 
 export default AllProducts;
-
-
-// export default CategoriesAndProducts;
