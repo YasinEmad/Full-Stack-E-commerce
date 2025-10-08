@@ -8,8 +8,8 @@ import Userlayout from './componentes/Layout/Userlayout';
 // Lazy load pages for better initial load performance
 const HomePage = lazy(() => import('./pages/Home'));
 const Categories = lazy(() => import('./pages/Categories'));
-const MensProducts = lazy(() => import('./pages/MensProducts'));
-const WomensProducts = lazy(() => import('./pages/WomensProducts'));
+const TechProducts = lazy(() => import('./pages/TechProducts'));
+const ArabProducts = lazy(() => import('./pages/ArabProducts'));
 const About = lazy(() => import('./pages/About'));
 const ProductDetails = lazy(() => import('./pages/ProductDetails'));
 
@@ -32,8 +32,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/categories" element={<Userlayout><Categories /></Userlayout>} />
-            <Route path="/men" element={<Userlayout><MensProducts /></Userlayout>} />
-            <Route path="/women" element={<Userlayout><WomensProducts /></Userlayout>} />
+            <Route path="/tech" element={<Userlayout><TechProducts /></Userlayout>} />
+            <Route path="/arab" element={<Userlayout><ArabProducts /></Userlayout>} />
             <Route path="/about" element={<Userlayout><About /></Userlayout>} />
             <Route path="/product/:id" element={<Userlayout><ProductDetails /></Userlayout>} />
               {/* Hidden admin routes, not in navbar */}
@@ -47,6 +47,7 @@ function App() {
     </ErrorBoundary>
   );
 }
+
 
 
 export default App;

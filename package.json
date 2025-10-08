@@ -2,6 +2,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.0",
     "axios": "^1.12.2",
+    "framer-motion": "^12.23.22",
     "react-redux": "^9.2.0"
   }
 }

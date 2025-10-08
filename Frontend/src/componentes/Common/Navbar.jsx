@@ -12,6 +12,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { openCart } from '../../redux/cartSlice';
 import CartDrawer from '../Cart/CartDrawer';
+import { Cpu, Globe2 } from 'lucide-react';
+
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -29,12 +31,13 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const navItems = [
-    { title: 'Collections', icon: Sparkles, href: '/categories' },
-    { title: 'Men', icon: Shirt, href: '/men' },
-    { title: 'Women', icon: Crown, href: '/women' },
-    { title: 'About', icon: Users, href: '/about' }
-  ];
+ const navItems = [
+  { title: 'Collections', icon: Sparkles, href: '/categories' },
+  { title: 'Tech', icon: Cpu, href: '/tech' },
+  { title: 'Arab', icon: Globe2, href: '/arab' },
+  { title: 'About', icon: Users, href: '/about' }
+];
+
 
   return (
     <>

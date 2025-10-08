@@ -7,7 +7,7 @@ import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 // 🚀 Import the custom hook
 import useProducts from '../hooks/useProducts'; // Adjust path as necessary
 
-const WomensProducts = () => {
+const ArabProducts = () => {
   // 🚀 Use the custom hook, passing "womens" as the initial category
   const {
     filtered,
@@ -328,4 +328,4 @@ const WomensProducts = () => {
   );
 };
 
-export default WomensProducts;
+export default ArabProducts;
