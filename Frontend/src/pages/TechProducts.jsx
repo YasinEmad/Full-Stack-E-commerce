@@ -24,7 +24,7 @@ const TechProducts = () => {
     uniqueBrands,
     clearFilters,
     activeFilterCount,
-  } = useProducts("mens"); // 👈 Pass "mens" as the initial category
+  } = useProducts("tech"); // 👈 Pass "tech" as the initial category
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -32,16 +32,22 @@ const TechProducts = () => {
   const dispatch = useDispatch();
 
   // --- Loading State ---
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading premium products...</p>
+ if (loading) {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="relative w-16 h-16 mx-auto">
+          <div className="absolute inset-0 rounded-full border-4 border-t-transparent border-blue-500 animate-spin"></div>
+          <div className="absolute inset-3 rounded-full bg-gray-900"></div>
         </div>
+        <p className="text-gray-300 text-xl font-medium tracking-wide">
+          Loading premium products
+        </p>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
 
   // --- Error State ---
   if (error) {
@@ -68,10 +74,11 @@ const TechProducts = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Men's Collection
+              tech's Collection
             </h1>
             <p className="text-gray-600 text-lg">
-              Discover premium products crafted for the modern man
+              Explore our exclusive range of tech styles designed for
+              enthusiasts and professionals alike.
             </p>
           </div>
 

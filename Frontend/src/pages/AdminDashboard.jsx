@@ -55,9 +55,9 @@ export default function AdminDashboard() {
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 >
-                  <option value="mens">Men's</option>
-                  <option value="womens">Women's</option>
                   <option value="accessories">Accessories</option>
+                  <option value="arab">Arab</option>
+                  <option value="tech">Tech</option>
                 </select>
               </div>
 

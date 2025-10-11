@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,10 +6,14 @@ export function useAdminProducts() {
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
     name: '',
-    category: 'mens',
+    category: 'accessories',
     price: '',
     brand: '',
     image: '',
+    image2: '',
+    image3: '',
+    description: '',
+    colors: [],
     inStock: true,
     sale: false,
   });
@@ -22,15 +25,21 @@ export function useAdminProducts() {
         const response = await fetch('/api/admin/verify', {
           credentials: 'include',
         });
+
         if (!response.ok) {
+          localStorage.clear();
+          sessionStorage.clear();
           navigate('/admin/login');
         } else {
           fetchProducts();
         }
       } catch {
+        localStorage.clear();
+        sessionStorage.clear();
         navigate('/admin/login');
       }
     };
+
     verifyAuth();
   }, [navigate]);
 
@@ -66,13 +75,17 @@ export function useAdminProducts() {
         credentials: 'include',
       });
       if (response.ok) {
-        fetchProducts();
+        await fetchProducts();
         setNewProduct({
           name: '',
-          category: 'mens',
+          category: 'accessories',
           price: '',
           brand: '',
           image: '',
+          image2: '',
+          image3: '',
+          description: '',
+          colors: [],
           inStock: true,
           sale: false,
         });
@@ -93,7 +106,7 @@ export function useAdminProducts() {
         credentials: 'include',
       });
       if (response.ok) {
-        fetchProducts();
+        await fetchProducts();
         setEditingProduct(null);
       }
     } catch (error) {
@@ -109,7 +122,7 @@ export function useAdminProducts() {
           credentials: 'include',
         });
         if (response.ok) {
-          fetchProducts();
+          await fetchProducts();
         }
       } catch (error) {
         console.error('Failed to delete product:', error);

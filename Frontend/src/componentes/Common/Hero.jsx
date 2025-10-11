@@ -36,7 +36,7 @@ const HeroSection = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate('/categories')}
-          className="mt-10 bg-[#e48d0c] text-black font-semibold py-3 px-10 rounded-full shadow-md hover:bg-[#c97900] transition-all duration-300"
+          className="mt-10 bg-[#fc9e11] text-black font-semibold py-3 px-10 rounded-full shadow-md hover:bg-[#c97900] transition-all duration-300"
         >
           Explore Collections
         </motion.button>

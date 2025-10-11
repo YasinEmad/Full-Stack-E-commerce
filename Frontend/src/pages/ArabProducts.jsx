@@ -24,7 +24,7 @@ const ArabProducts = () => {
     uniqueBrands,
     clearFilters,
     activeFilterCount,
-  } = useProducts("womens"); // 👈 This fetches "http://localhost:5000/api/products?category=womens" and handles all filtering.
+  } = useProducts("arab"); // 👈 This fetches "http://localhost:5000/api/products?category=arab" and handles all filtering.
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -32,16 +32,22 @@ const ArabProducts = () => {
   const dispatch = useDispatch();
 
   // --- Loading State (Delegated from hook) ---
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading premium products...</p>
+if (loading) {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="relative w-16 h-16 mx-auto">
+          <div className="absolute inset-0 rounded-full border-4 border-t-transparent border-blue-500 animate-spin"></div>
+          <div className="absolute inset-3 rounded-full bg-gray-900"></div>
         </div>
+        <p className="text-gray-300 text-xl font-medium tracking-wide">
+          Loading premium products
+        </p>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
 
   // --- Error State (Delegated from hook) ---
   if (error) {

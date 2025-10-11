@@ -21,7 +21,7 @@ const CollectionsSection = () => {
 
   return (
     <div className="container mx-auto px-4 py-20">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-14 text-gray-900 tracking-tight">
+      <h2 className="text-4xl md:text-5xl font-bold text-center mb-14 text-orange-400 tracking-tight">
         Explore Our Collections
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -46,7 +46,7 @@ const CollectionsSection = () => {
                   e.stopPropagation();
                   navigate(item.path);
                 }}
-                className="border-2 border-white text-white font-medium py-2 px-6 rounded-full hover:bg-white hover:text-black transition duration-300"
+               className="border-2 border-white text-white font-medium py-2 px-6 rounded-full hover:bg-orange-500 hover:text-white transition duration-300"
               >
                 Shop Now
               </button>
