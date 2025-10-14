@@ -1,7 +1,7 @@
-import Userlayout from '../componentes/Layout/Userlayout';
-import HeroSection from '../componentes/Common/Hero';
-import CollectionsSection from "../componentes/Products/Colliction";
-// import Slider from '../componentes/Products/Slider';
+import Userlayout from '../components/Layout/Userlayout';
+import HeroSection from '../components/Common/Hero';
+import CollectionsSection from "../components/Products/Colliction";
+// import Slider from '../components/Products/Slider';
 
 // Define the array of images
 // const sliderImages = [

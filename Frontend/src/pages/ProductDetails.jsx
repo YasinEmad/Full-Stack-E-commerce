@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../redux/cartSlice';
-import Userlayout from '../componentes/Layout/Userlayout';
+import Userlayout from '../components/Layout/Userlayout';
 
 const ProductDetails = () => {
   const { id } = useParams();

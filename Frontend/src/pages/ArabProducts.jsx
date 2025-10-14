@@ -1,56 +1,72 @@
-import { useState } from "react";
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addToCart } from '../redux/cartSlice';
+import { addToCart } from "../redux/cartSlice";
+import { fetchProductsByCategory } from "../redux/productSlice";
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 
-// 🚀 Import the custom hook
-import useProducts from '../hooks/useProducts'; // Adjust path as necessary
-
 const ArabProducts = () => {
-  // 🚀 Use the custom hook, passing "womens" as the initial category
-  const {
-    filtered,
-    loading,
-    error,
-    searchTerm,
-    setSearchTerm,
-    brand,
-    setBrand,
-    saleOnly,
-    setSaleOnly,
-    maxPrice,
-    setMaxPrice,
-    uniqueBrands,
-    clearFilters,
-    activeFilterCount,
-  } = useProducts("arab"); // 👈 This fetches "http://localhost:5000/api/products?category=arab" and handles all filtering.
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const {
+    items: products,
+    status,
+    error,
+  } = useSelector((state) => state.products);
+
+  const [filtered, setFiltered] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [brand, setBrand] = useState("all");
+  const [saleOnly, setSaleOnly] = useState(false);
+  const [maxPrice, setMaxPrice] = useState(300);
+  const [uniqueBrands, setUniqueBrands] = useState([]);
+  const [activeFilterCount, setActiveFilterCount] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchProductsByCategory("arab"));
+  }, [dispatch]);
 
-  // --- Loading State (Delegated from hook) ---
-if (loading) {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <div className="relative w-16 h-16 mx-auto">
-          <div className="absolute inset-0 rounded-full border-4 border-t-transparent border-blue-500 animate-spin"></div>
-          <div className="absolute inset-3 rounded-full bg-gray-900"></div>
+  useEffect(() => {
+    let filteredData = products.filter(
+      (p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        p.price <= maxPrice &&
+        (brand === "all" || p.brand === brand) &&
+        (!saleOnly || p.sale)
+    );
+    setFiltered(filteredData);
+
+    if (status === "succeeded") {
+      setUniqueBrands([...new Set(products.map((p) => p.brand))]);
+    }
+
+    const count =
+      (brand !== "all" ? 1 : 0) +
+      (saleOnly ? 1 : 0) +
+      (maxPrice < 300 ? 1 : 0) +
+      (searchTerm ? 1 : 0);
+    setActiveFilterCount(count);
+  }, [products, searchTerm, brand, saleOnly, maxPrice, status]);
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="relative w-16 h-16 mx-auto">
+            <div className="absolute inset-0 rounded-full border-4 border-t-transparent border-blue-500 animate-spin"></div>
+            <div className="absolute inset-3 rounded-full bg-gray-900"></div>
+          </div>
+          <p className="text-gray-300 text-xl font-medium tracking-wide">
+            Loading premium products
+          </p>
         </div>
-        <p className="text-gray-300 text-xl font-medium tracking-wide">
-          Loading premium products
-        </p>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-
-  // --- Error State (Delegated from hook) ---
-  if (error) {
+  if (status === "failed") {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md">
@@ -66,22 +82,25 @@ if (loading) {
     );
   }
 
-  // --- Render (Component logic is now only rendering/UI) ---
+  const clearFilters = () => {
+    setSearchTerm("");
+    setBrand("all");
+    setSaleOnly(false);
+    setMaxPrice(300);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Women's Collection
+              Arab Collection
             </h1>
             <p className="text-gray-600 text-lg">
-              Discover premium products crafted for the modern woman
+              Discover premium products from the Arab world
             </p>
           </div>
-
-          {/* Search Bar */}
           <div className="relative max-w-xl mx-auto mb-6">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
@@ -93,7 +112,6 @@ if (loading) {
             />
           </div>
 
-          {/* Filter Toggle */}
           <div className="flex justify-center">
             <button
               onClick={() => setShowFilters(!showFilters)}
@@ -102,7 +120,7 @@ if (loading) {
               <Filter className="w-4 h-4" />
               Filters
               <span className="bg-gray-700 text-xs px-2 py-1 rounded-full">
-                {activeFilterCount} {/* 🚀 Value from hook */}
+                {activeFilterCount}
               </span>
             </button>
           </div>
@@ -110,11 +128,9 @@ if (loading) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Filters Panel */}
         {showFilters && (
           <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Brand Filter */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Brand
@@ -132,8 +148,6 @@ if (loading) {
                   ))}
                 </select>
               </div>
-
-              {/* Sale Filter */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Special Offers
@@ -150,7 +164,6 @@ if (loading) {
                 </label>
               </div>
 
-              {/* Price Filter */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Max Price:{" "}
@@ -173,10 +186,9 @@ if (loading) {
               </div>
             </div>
 
-            {/* Clear Filters */}
             <div className="mt-6 pt-6 border-t border-gray-200">
               <button
-                onClick={clearFilters} 
+                onClick={clearFilters}
                 className="text-gray-500 hover:text-gray-700 font-medium transition-colors duration-200"
               >
                 Clear all filters
@@ -185,7 +197,6 @@ if (loading) {
           </div>
         )}
 
-        {/* Results Header */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-gray-600">
             <span className="font-semibold text-gray-900">
@@ -195,7 +206,6 @@ if (loading) {
           </p>
         </div>
 
-        {/* Products Grid */}
         {filtered.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -227,8 +237,6 @@ if (loading) {
                     alt={product.name}
                     className="w-full h-64 object-contain bg-white"
                   />
-
-                  {/* Badges */}
                   <div className="absolute top-3 left-3 flex flex-col gap-2">
                     {product.sale && (
                       <span className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
@@ -264,7 +272,6 @@ if (loading) {
                         </p>
                       )}
                     </div>
-
                     <div className="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded-lg">
                       <Star className="w-4 h-4 text-amber-400 fill-current" />
                       <span className="text-sm font-semibold text-amber-700">
@@ -309,7 +316,7 @@ if (loading) {
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .slider::-webkit-slider-thumb {
           appearance: none;
           height: 20px;
@@ -319,7 +326,6 @@ if (loading) {
           cursor: pointer;
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
-
         .slider::-moz-range-thumb {
           height: 20px;
           width: 20px;

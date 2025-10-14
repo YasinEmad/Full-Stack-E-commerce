@@ -1,56 +1,98 @@
-import { useState } from "react";
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from '../redux/cartSlice';
+import { fetchProducts } from '../redux/productSlice';
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 
-// Import the custom hook
-import useProducts from '../hooks/useProducts'; // Adjust path as necessary
-
 const TechProducts = () => {
-  // 🚀 Use the custom hook, passing the category to automatically fetch the correct products
-  const {
-    filtered,
-    loading,
-    error,
-    searchTerm,
-    setSearchTerm,
-    brand,
-    setBrand,
-    saleOnly,
-    setSaleOnly,
-    maxPrice,
-    setMaxPrice,
-    uniqueBrands,
-    clearFilters,
-    activeFilterCount,
-  } = useProducts("tech"); // 👈 Pass "tech" as the initial category
-
+  // keep same state names as original
   const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [brand, setBrand] = useState("all");
+  const [saleOnly, setSaleOnly] = useState(false);
+  const [maxPrice, setMaxPrice] = useState(300);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // --- Loading State ---
- if (loading) {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <div className="relative w-16 h-16 mx-auto">
-          <div className="absolute inset-0 rounded-full border-4 border-t-transparent border-blue-500 animate-spin"></div>
-          <div className="absolute inset-3 rounded-full bg-gray-900"></div>
-        </div>
-        <p className="text-gray-300 text-xl font-medium tracking-wide">
-          Loading premium products
-        </p>
-      </div>
-    </div>
-  );
-}
+  // redux products state
+  const { items: allProducts = [], status, error } = useSelector((state) => state.products || {});
 
+  useEffect(() => {
+    if (status === "idle" || status === undefined) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, status]);
+
+  // loading and error flags mapped to the variables used in the original component
+  const loading = status === "loading";
+  const fetchError = error || null;
+
+  // Filter tech products only (ensure lowercase compare)
+  const productsCategory = allProducts.filter(
+    (p) => String(p.category || "").toLowerCase() === "tech"
+  );
+
+  // unique brands for the brand select (derived from category items)
+  const uniqueBrands = [...new Set(productsCategory.map((p) => p.brand).filter(Boolean))];
+
+  // Build filtered list following original behavior
+  let filtered = [...productsCategory];
+
+  // Apply search filter
+  if (searchTerm) {
+    const q = searchTerm.toLowerCase();
+    filtered = filtered.filter((p) =>
+      String(p.name || "").toLowerCase().includes(q)
+    );
+  }
+
+  // Apply brand filter
+  if (brand !== "all") {
+    filtered = filtered.filter((p) => p.brand === brand);
+  }
+
+  // Apply sale filter
+  if (saleOnly) {
+    filtered = filtered.filter((p) => p.sale);
+  }
+
+  // Apply max price filter
+  filtered = filtered.filter((p) => Number(p.price) <= Number(maxPrice));
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setBrand("all");
+    setSaleOnly(false);
+    setMaxPrice(300);
+  };
+
+  const activeFilterCount =
+    (brand !== "all" ? 1 : 0) + (saleOnly ? 1 : 0) + (maxPrice < 300 ? 1 : 0);
+
+  // keep variable names used in JSX
+  const filteredCount = filtered.length;
+
+  // --- Loading State ---
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="relative w-16 h-16 mx-auto">
+            <div className="absolute inset-0 rounded-full border-4 border-t-transparent border-blue-500 animate-spin"></div>
+            <div className="absolute inset-3 rounded-full bg-gray-900"></div>
+          </div>
+          <p className="text-gray-300 text-xl font-medium tracking-wide">
+            Loading premium products
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // --- Error State ---
-  if (error) {
+  if (fetchError) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md">
@@ -60,7 +102,7 @@ const TechProducts = () => {
           <h3 className="text-xl font-semibold text-gray-800 mb-2">
             Something went wrong
           </h3>
-          <p className="text-gray-600">{error}</p>
+          <p className="text-gray-600">{fetchError}</p>
         </div>
       </div>
     );
@@ -73,10 +115,9 @@ const TechProducts = () => {
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              tech's Collection
-            </h1>
-            <p className="text-gray-600 text-lg">
+                          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                          Tech Collection
+                        </h1>            <p className="text-gray-600 text-lg">
               Explore our exclusive range of tech styles designed for
               enthusiasts and professionals alike.
             </p>
@@ -190,14 +231,14 @@ const TechProducts = () => {
         <div className="flex items-center justify-between mb-6">
           <p className="text-gray-600">
             <span className="font-semibold text-gray-900">
-              {filtered.length}
+              {filteredCount}
             </span>{" "}
             products found
           </p>
         </div>
 
         {/* Products Grid */}
-        {filtered.length === 0 ? (
+        {filteredCount === 0 ? (
           <div className="text-center py-16">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <ShoppingBag className="w-10 h-10 text-gray-400" />
@@ -310,7 +351,7 @@ const TechProducts = () => {
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .slider::-webkit-slider-thumb {
           appearance: none;
           height: 20px;
