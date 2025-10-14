@@ -1,8 +1,11 @@
 // src/redux/cartSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
+// load cart from localStorage if exists
+const savedCart = JSON.parse(localStorage.getItem('cartItems')) || [];
+
 const initialState = {
-  items: [], // {id, name, price, image, quantity}
+  items: savedCart, // load saved items here
   isCartOpen: false,
 };
 
@@ -18,12 +21,15 @@ const cartSlice = createSlice({
       } else {
         state.items.push({ ...product, quantity: 1 });
       }
+      localStorage.setItem('cartItems', JSON.stringify(state.items));
     },
     removeFromCart: (state, action) => {
       state.items = state.items.filter(item => item.id !== action.payload);
+      localStorage.setItem('cartItems', JSON.stringify(state.items));
     },
     clearCart: (state) => {
       state.items = [];
+      localStorage.removeItem('cartItems');
     },
     openCart: (state) => {
       state.isCartOpen = true;
