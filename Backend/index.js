@@ -31,10 +31,12 @@ app.get('/', (req, res) => {
 const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
 const { router: adminRoutes, verifyAdminToken } = require('./routes/admin');
+const orderRoutes = require('./routes/orders');
 
 // Use routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 
 
