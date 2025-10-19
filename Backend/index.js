@@ -32,7 +32,6 @@ const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
 const { router: adminRoutes, verifyAdminToken } = require('./routes/admin');
-const orderRoutes = require('./routes/orders');
 
 // Use routes
 app.use('/api/users', userRoutes);
