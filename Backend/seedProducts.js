@@ -8,7 +8,7 @@ const products = [
   // Men's Products
   {
     name: 'Classic Blue Denim Jacket',
-    category: 'mens',
+    category: 'tech',
     price: 89.99,
     brand: 'Levi\'s',
     rating: 4.5,
@@ -22,7 +22,7 @@ const products = [
   },
   {
     name: 'Premium Cotton T-Shirt',
-    category: 'mens',
+    category: 'arab',
     price: 29.99,
     brand: 'Nike',
     rating: 4.8,
@@ -36,7 +36,7 @@ const products = [
   },
   {
     name: 'Slim Fit Chino Pants',
-    category: 'mens',
+    category: 'tech',
     price: 59.99,
     brand: 'H&M',
     rating: 4.2,
@@ -52,7 +52,7 @@ const products = [
   // Women's Products
   {
     name: 'Floral Summer Dress',
-    category: 'womens',
+    category: 'tech',
     price: 69.99,
     brand: 'H&M',
     rating: 4.3,
