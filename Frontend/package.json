@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "node -v | grep -q $(cat .nvmrc) || (echo 'Please use Node.js version' $(cat .nvmrc) && exit 1)",
     "dev": "vite",
+    "prebuild": "node -v | grep -q $(cat .nvmrc) || (echo 'Please use Node.js version' $(cat .nvmrc) && exit 1)",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

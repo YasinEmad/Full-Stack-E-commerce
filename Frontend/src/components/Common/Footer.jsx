@@ -1,5 +1,3 @@
-import React from 'react';
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 
 const Footer = () => {
   return (
@@ -8,28 +6,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 
           <div className="flex flex-col space-y-4">
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-gray-900">Follow Us</h3>
-            
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-500 hover:text-gray-900 transition duration-300" aria-label="Facebook">
-                <FaFacebookF className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-gray-900 transition duration-300" aria-label="Twitter">
-                <FaTwitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-gray-900 transition duration-300" aria-label="Instagram">
-                <FaInstagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-gray-900 transition duration-300" aria-label="LinkedIn">
-                <FaLinkedinIn className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
+      
           <div>
             <h4 className="text-lg font-semibold text-gray-900">Call Us</h4>
-            <p className="text-gray-700">+1 (123) 456-7890</p>
-            <p className="text-gray-600">Mon - Fri: 9 AM - 6 PM</p>
+       
+
+            <p className="text-gray-700">+20 1017844312</p>
+            <p className="text-gray-600">Sut - Fri: 24 hours</p>
           </div>
             </div>
 
@@ -38,20 +21,13 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-gray-900 mb-4">Shop</h4>
             <ul className="space-y-2">
               <li><a href="/" className="text-gray-700 hover:text-gray-900 transition duration-300">Home</a></li>
-              <li><a href="/men" className="text-gray-700 hover:text-gray-900 transition duration-300">Men's Collection</a></li>
-              <li><a href="/women" className="text-gray-700 hover:text-gray-900 transition duration-300">Women's Collection</a></li>
-              <li><a href="/cart" className="text-gray-700 hover:text-gray-900 transition duration-300">All clothing</a></li>
+              <li><a href="/tech" className="text-gray-700 hover:text-gray-900 transition duration-300">tech Collection</a></li>
+              <li><a href="/women" className="text-gray-700 hover:text-gray-900 transition duration-300">Arab Collection</a></li>
+              <li><a href="/categories" className="text-gray-700 hover:text-gray-900 transition duration-300">All categories</a></li>
             </ul>
           </div>
 
-          <div>
-            <h4 className="text-lg font-semibold text-gray-900 mb-4">Support</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-700 hover:text-gray-900 transition duration-300">FAQs</a></li>
-              <li><a href="/contact" className="text-gray-700 hover:text-gray-900 transition duration-300">Contact Us</a></li>
-              <li><a href="/about" className="text-gray-700 hover:text-gray-900 transition duration-300">About Us</a></li>
-            </ul>
-          </div>
+
 
           <div>
             <h4 className="text-lg font-semibold text-gray-900 mb-4">Newsletter</h4>
@@ -73,7 +49,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-200 mt-8 pt-8 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} FashionStore. All rights reserved.
+          © {new Date().getFullYear()} ArabTech. All rights reserved.
         </div>
       </div>
     </footer>
