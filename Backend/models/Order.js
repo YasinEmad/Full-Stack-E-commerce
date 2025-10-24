@@ -29,6 +29,11 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true
     }
+    ,
+    delivered: {
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true
 });
