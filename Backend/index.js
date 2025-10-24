@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
-
+const feedbackRoutes = require('./routes/feedback');
 const app = express();
 
 // Enable CORS for all routes with credentials
@@ -21,6 +21,7 @@ connectDB();
 
 // Middleware
 app.use(express.json());
+app.use('/api/feedback', feedbackRoutes);
 
 // Basic route to test server
 app.get('/', (req, res) => {
