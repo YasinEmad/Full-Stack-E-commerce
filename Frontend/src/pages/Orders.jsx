@@ -6,30 +6,53 @@ const Orders = () => {
     const [error, setError] = useState(null);
     const [actionLoading, setActionLoading] = useState(false);
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const response = await fetch('/api/orders');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch orders');
-                }
-                const data = await response.json();
-                setOrders(data);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+    // auth for orders management
+    const [authenticated, setAuthenticated] = useState(false);
+    const [loginEmail, setLoginEmail] = useState('');
+    const [loginPassword, setLoginPassword] = useState('');
+    const [loginError, setLoginError] = useState('');
+    const [loginLoading, setLoginLoading] = useState(false);
 
-        fetchOrders();
+    useEffect(() => {
+        (async () => {
+            // Verify if already logged in for orders
+            try {
+                const verifyRes = await fetch('/api/orders/auth/verify', { credentials: 'include' });
+                if (verifyRes.ok) {
+                    setAuthenticated(true);
+                    await fetchOrders();
+                    return;
+                }
+            } catch {
+                // ignore
+            }
+
+            setLoading(false);
+        })();
     }, []);
+
+    const fetchOrders = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch('/api/orders', { credentials: 'include' });
+            if (!response.ok) {
+                throw new Error('Failed to fetch orders');
+            }
+            const data = await response.json();
+            setOrders(data);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleDelete = async (id) => {
         if (!window.confirm('Are you sure you want to delete this order?')) return;
         setActionLoading(true);
         try {
-            const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/orders/${id}`, { method: 'DELETE', credentials: 'include' });
             if (!res.ok) {
                 const text = await res.text();
                 throw new Error(text || 'Failed to delete order');
@@ -53,6 +76,7 @@ const Orders = () => {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ delivered: newDelivered }),
+                credentials: 'include'
             });
             if (!res.ok) {
                 const text = await res.text();
@@ -69,13 +93,84 @@ const Orders = () => {
         }
     };
 
-    if (loading) {
-        return <div className="text-center py-10">Loading...</div>;
-    }
+    const handleLoginSubmit = async (e) => {
+        e.preventDefault();
+        setLoginError('');
+        setLoginLoading(true);
+        try {
+            const res = await fetch('/api/orders/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: loginEmail, password: loginPassword }),
+                credentials: 'include'
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setAuthenticated(true);
+                setLoginEmail('');
+                setLoginPassword('');
+                // fetch orders after login
+                await fetchOrders();
+            } else {
+                setLoginError(data.error || 'Login failed');
+            }
+        } catch {
+            setLoginError('Server error');
+        } finally {
+            setLoginLoading(false);
+        }
+    };
 
-    if (error) {
-        return <div className="text-center py-10 text-red-500">Error: {error}</div>;
-    }
+
+        // If still loading while verifying/authenticated fetch
+        if (loading) {
+                return <div className="text-center py-10">Loading...</div>;
+        }
+
+        // If not authenticated show login form similar to AdminLogin
+        if (!authenticated) {
+                return (
+                        <div 
+                            className="flex items-center justify-center min-h-screen bg-cover bg-center" 
+                            style={{ backgroundImage: "url('https://plus.unsplash.com/premium_photo-1677995700941-100976883af7?q=80&w=923&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}
+                        >
+                            <div className="w-full max-w-md p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl">
+                                <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Orders Login</h2>
+                                <form onSubmit={handleLoginSubmit} className="space-y-4">
+                                    <input
+                                        type="email"
+                                        placeholder="Email"
+                                        value={loginEmail}
+                                        onChange={(e) => setLoginEmail(e.target.value)}
+                                        required
+                                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                    />
+
+                                    <input
+                                        type="password"
+                                        placeholder="Password"
+                                        value={loginPassword}
+                                        onChange={(e) => setLoginPassword(e.target.value)}
+                                        required
+                                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                    />
+
+                                    <button
+                                        type="submit"
+                                        className="w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition"
+                                        disabled={loginLoading}
+                                    >
+                                        {loginLoading ? 'Logging in...' : 'Login'}
+                                    </button>
+
+                                    {loginError && (
+                                        <div className="text-red-600 text-center mt-2 text-sm">{loginError}</div>
+                                    )}
+                                </form>
+                            </div>
+                        </div>
+                );
+        }
 
 
     return (

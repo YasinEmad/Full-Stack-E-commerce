@@ -1,21 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orderController');
+const { verifyOrderToken } = require('./orderAuth');
 
-// Get all orders
-router.get('/', orderController.getAllOrders);
+// Protect listing, update, get single and delete routes with order auth.
+// Keep POST / (create order) public so site visitors can place orders.
 
-// Create a new order
+// Get all orders (protected)
+router.get('/', verifyOrderToken, orderController.getAllOrders);
+
+// Create a new order (public)
 router.post('/', orderController.createOrder);
 
 
-// Get a single order by ID
-router.get('/:id', orderController.getOrderById);
+// Get a single order by ID (protected)
+router.get('/:id', verifyOrderToken, orderController.getOrderById);
 
-// Update an order by ID
-router.put('/:id', orderController.updateOrder);
+// Update an order by ID (protected)
+router.put('/:id', verifyOrderToken, orderController.updateOrder);
 
-// Delete an order by ID
-router.delete('/:id', orderController.deleteOrder);
+// Delete an order by ID (protected)
+router.delete('/:id', verifyOrderToken, orderController.deleteOrder);
 
 module.exports = router;
