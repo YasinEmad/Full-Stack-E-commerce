@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { addToCart } from '../redux/cartSlice';
 import { fetchProducts } from '../redux/productSlice';
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
+import { ofTech } from "../hooks/useFilterProduct";
 
 const TechProducts = () => {
   // keep same state names as original
@@ -11,7 +12,7 @@ const TechProducts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [brand, setBrand] = useState("all");
   const [saleOnly, setSaleOnly] = useState(false);
-  const [maxPrice, setMaxPrice] = useState(300);
+  const [maxPrice, setMaxPrice] = useState(2000);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -29,49 +30,20 @@ const TechProducts = () => {
   const loading = status === "loading";
   const fetchError = error || null;
 
-  // Filter tech products only (ensure lowercase compare)
-  const productsCategory = allProducts.filter(
-    (p) => String(p.category || "").toLowerCase() === "tech"
-  );
-
-  // unique brands for the brand select (derived from category items)
-  const uniqueBrands = [...new Set(productsCategory.map((p) => p.brand).filter(Boolean))];
-
-  // Build filtered list following original behavior
-  let filtered = [...productsCategory];
-
-  // Apply search filter
-  if (searchTerm) {
-    const q = searchTerm.toLowerCase();
-    filtered = filtered.filter((p) =>
-      String(p.name || "").toLowerCase().includes(q)
-    );
-  }
-
-  // Apply brand filter
-  if (brand !== "all") {
-    filtered = filtered.filter((p) => p.brand === brand);
-  }
-
-  // Apply sale filter
-  if (saleOnly) {
-    filtered = filtered.filter((p) => p.sale);
-  }
-
-  // Apply max price filter
-  filtered = filtered.filter((p) => Number(p.price) <= Number(maxPrice));
+  const { filtered, uniqueBrands, activeFilterCount } = ofTech(allProducts, {
+    searchTerm,
+    brand,
+    saleOnly,
+    maxPrice,
+  });
 
   const clearFilters = () => {
     setSearchTerm("");
     setBrand("all");
     setSaleOnly(false);
-    setMaxPrice(300);
+    setMaxPrice(2000);
   };
 
-  const activeFilterCount =
-    (brand !== "all" ? 1 : 0) + (saleOnly ? 1 : 0) + (maxPrice < 300 ? 1 : 0);
-
-  // keep variable names used in JSX
   const filteredCount = filtered.length;
 
   // --- Loading State ---
@@ -202,14 +174,14 @@ const TechProducts = () => {
                   <input
                     type="range"
                     min="0"
-                    max="300"
+                    max="2000"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(Number(e.target.value))}
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                   />
                   <div className="flex justify-between text-xs text-gray-500 mt-2">
                     <span>$0</span>
-                    <span>$300</span>
+                    <span>$2000</span>
                   </div>
                 </div>
               </div>

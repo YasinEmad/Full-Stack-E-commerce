@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../redux/cartSlice";
 import { fetchProductsByCategory } from "../redux/productSlice";
+import { ofArab } from "../hooks/useFilterProduct";
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 
 const ArabProducts = () => {
@@ -15,11 +16,11 @@ const ArabProducts = () => {
     error,
   } = useSelector((state) => state.products);
 
-  const [filtered, setFiltered] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [brand, setBrand] = useState("all");
   const [saleOnly, setSaleOnly] = useState(false);
-  const [maxPrice, setMaxPrice] = useState(300);
+  const [maxPrice, setMaxPrice] = useState(2000);
+  // filter UI state
   const [uniqueBrands, setUniqueBrands] = useState([]);
   const [activeFilterCount, setActiveFilterCount] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
@@ -27,28 +28,16 @@ const ArabProducts = () => {
   useEffect(() => {
     dispatch(fetchProductsByCategory("arab"));
   }, [dispatch]);
+  // derive filtered results from centralized helper
+  const { filtered, uniqueBrands: brandsFromHelper, activeFilterCount: countFromHelper } =
+    ofArab(products, { searchTerm, brand, saleOnly, maxPrice });
 
   useEffect(() => {
-    let filteredData = products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        p.price <= maxPrice &&
-        (brand === "all" || p.brand === brand) &&
-        (!saleOnly || p.sale)
-    );
-    setFiltered(filteredData);
-
     if (status === "succeeded") {
-      setUniqueBrands([...new Set(products.map((p) => p.brand))]);
+      setUniqueBrands(brandsFromHelper);
     }
-
-    const count =
-      (brand !== "all" ? 1 : 0) +
-      (saleOnly ? 1 : 0) +
-      (maxPrice < 300 ? 1 : 0) +
-      (searchTerm ? 1 : 0);
-    setActiveFilterCount(count);
-  }, [products, searchTerm, brand, saleOnly, maxPrice, status]);
+    setActiveFilterCount(countFromHelper);
+  }, [brandsFromHelper, countFromHelper, status]);
 
   if (status === "loading") {
     return (
@@ -86,7 +75,7 @@ const ArabProducts = () => {
     setSearchTerm("");
     setBrand("all");
     setSaleOnly(false);
-    setMaxPrice(300);
+    setMaxPrice(2000);
   };
 
   return (
@@ -173,14 +162,14 @@ const ArabProducts = () => {
                   <input
                     type="range"
                     min="0"
-                    max="300"
+                    max="2000"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(Number(e.target.value))}
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                   />
                   <div className="flex justify-between text-xs text-gray-500 mt-2">
                     <span>$0</span>
-                    <span>$300</span>
+                    <span>$2000</span>
                   </div>
                 </div>
               </div>

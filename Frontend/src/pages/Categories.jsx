@@ -1,37 +1,53 @@
-import { useState } from "react";
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from '../redux/cartSlice';
+import { fetchProducts } from '../redux/productSlice';
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
-
-// Import the new custom hook
-import useProducts from '../hooks/useProducts'; // Adjust path as necessary
+import { ofCategories } from "../hooks/useFilterProduct";
 
 const AllProducts = () => {
-  // Use the custom hook to get all state and logic
-  const {
-    filtered,
-    loading,
-    error,
-    searchTerm,
-    setSearchTerm,
-    brand,
-    setBrand,
-    saleOnly,
-    setSaleOnly,
-    maxPrice,
-    setMaxPrice,
-    category,
-    setCategory,
-    uniqueBrands,
-    uniqueCategories,
-    clearFilters,
-    activeFilterCount,
-  } = useProducts();
-
   const [showFilters, setShowFilters] = useState(false);
-  const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [brand, setBrand] = useState("all");
+  const [saleOnly, setSaleOnly] = useState(false);
+  const [maxPrice, setMaxPrice] = useState(2000);
+  const [category, setCategory] = useState("all");
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Get products from Redux store
+  const { items: allProducts = [], status, error } = useSelector((state) => state.products || {});
+
+  useEffect(() => {
+    if (status === "idle" || status === undefined) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, status]);
+
+  // loading flag
+  const loading = status === "loading";
+
+  const { filtered, uniqueBrands, uniqueCategories, activeFilterCount } = ofCategories(allProducts, {
+    searchTerm,
+    brand,
+    saleOnly,
+    maxPrice,
+    category,
+  });
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setBrand("all");
+    setCategory("all");
+    setSaleOnly(false);
+    setMaxPrice(2000);
+  };
+
+  // activeFilterCount is returned from the helper
+
+
 
   // --- Loading and Error States (Unchanged) ---
  if (loading) {
@@ -169,7 +185,7 @@ const AllProducts = () => {
                 </label>
               </div>
 
-              {/* Price Filter */}
+              {/* Price Filter --- THIS BLOCK IS CORRECTED --- */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Max Price:{" "}
@@ -178,15 +194,15 @@ const AllProducts = () => {
                 <div className="p-3 border border-gray-300 rounded-xl">
                   <input
                     type="range"
-                    min="0"
-                    max="300"
+                    min="1" 
+                    max="2000"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(Number(e.target.value))}
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                   />
                   <div className="flex justify-between text-xs text-gray-500 mt-2">
-                    <span>$0</span>
-                    <span>$300</span>
+                    <span>$1</span>
+                    <span>$2000</span>
                   </div>
                 </div>
               </div>
