@@ -83,7 +83,9 @@ const ArabProducts = () => {
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            <h1
+              className="text-4xl font-bold text-gray-900 mb-2 hover:text-orange-500 transition-colors duration-300"
+            >
               Arab Collection
             </h1>
             <p className="text-gray-600 text-lg">
@@ -104,7 +106,7 @@ const ArabProducts = () => {
           <div className="flex justify-center">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors duration-200"
+              className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-colors duration-200"
             >
               <Filter className="w-4 h-4" />
               Filters
@@ -121,13 +123,13 @@ const ArabProducts = () => {
           <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-orange-700 mb-3">
                   Brand
                 </label>
                 <select
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  className="w-full p-3 border border-orange-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                 >
                   <option value="all">All Brands</option>
                   {uniqueBrands.map((b) => (
@@ -137,48 +139,48 @@ const ArabProducts = () => {
                   ))}
                 </select>
               </div>
+
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-orange-700 mb-3">
                   Special Offers
                 </label>
-                <label className="flex items-center gap-3 p-3 border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors duration-200">
+                <label className="flex items-center gap-3 p-3 border border-orange-300 rounded-xl cursor-pointer hover:bg-orange-50 transition-colors duration-200">
                   <input
                     type="checkbox"
                     checked={saleOnly}
                     onChange={() => setSaleOnly(!saleOnly)}
-                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-blue-600 bg-orange-100 border-orange-300 rounded focus:ring-blue-500"
                   />
                   <Tag className="w-4 h-4 text-red-500" />
-                  <span className="text-gray-700">On Sale Only</span>
+                  <span className="text-orange-700">On Sale Only</span>
                 </label>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Max Price:{" "}
-                  <span className="text-blue-600 font-bold">${maxPrice}</span>
+                <label className="block text-sm font-semibold text-orange-700 mb-3">
+                  Max Price: <span className="text-orange-600 font-bold">EGP{maxPrice}</span>
                 </label>
-                <div className="p-3 border border-gray-300 rounded-xl">
+                <div className="p-3 border border-orange-300 rounded-xl">
                   <input
                     type="range"
                     min="0"
                     max="2000"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(Number(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                    className="w-full h-2 bg-orange-200 rounded-lg appearance-none cursor-pointer slider"
                   />
-                  <div className="flex justify-between text-xs text-gray-500 mt-2">
-                    <span>$0</span>
-                    <span>$2000</span>
+                  <div className="flex justify-between text-xs text-orange-500 mt-2">
+                    <span>EGP 0</span>
+                    <span>EGP 2000</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="mt-6 pt-6 border-t border-orange-200">
               <button
                 onClick={clearFilters}
-                className="text-gray-500 hover:text-gray-700 font-medium transition-colors duration-200"
+                className="text-orange-500 hover:text-orange-700 font-medium transition-colors duration-200"
               >
                 Clear all filters
               </button>
@@ -218,58 +220,51 @@ const ArabProducts = () => {
             {filtered.map((product) => (
               <div
                 key={product._id}
-                className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-gray-200"
+                className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-gray-200 flex flex-col"
               >
                 <div className="relative overflow-hidden bg-gray-100">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-64 object-contain bg-white"
+                    className="w-full h-64 object-contain bg-white transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute top-3 left-3 flex flex-col gap-2">
+
+                  <div className="absolute top-4 left-4 flex flex-col gap-2">
                     {product.sale && (
-                      <span className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+                      <span className="bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg tracking-wide">
                         SALE
                       </span>
                     )}
                     {!product.inStock && (
-                      <span className="bg-gray-900 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+                      <span className="bg-gray-900 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg tracking-wide">
                         OUT OF STOCK
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="p-5">
-                  <div className="mb-3">
-                    <h3 className="text-lg font-semibold text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors duration-200">
-                      {product.name}
-                    </h3>
-                    <p className="text-sm text-gray-500 font-medium mt-1">
-                      {product.brand}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-2xl font-bold text-gray-900">
-                        ${product.price}
+                <div className="p-5 flex flex-col flex-1">
+                  <div className="flex-1">
+                    <div className="mb-3">
+                      <p className="text-sm text-gray-500 font-medium mb-1">
+                        {product.brand}
                       </p>
+                      <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200 h-14">
+                        {product.name}
+                      </h3>
+                    </div>
+
+                    <div className="mb-5">
                       {product.sale && (
-                        <p className="text-sm text-gray-500 line-through">
+                        <p className="text-sm text-red-500 line-through">
                           ${(product.price * 1.2).toFixed(0)}
                         </p>
                       )}
-                    </div>
-                    <div className="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded-lg">
-                      <Star className="w-4 h-4 text-amber-400 fill-current" />
-                      <span className="text-sm font-semibold text-amber-700">
-                        {product.rating}
-                      </span>
+                      <p className="text-2xl font-bold text-gray-900">EGP {product.price}</p>
                     </div>
                   </div>
 
-                  <div className="flex mt-4 space-x-2">
+                  <div className="flex space-x-2">
                     <button
                       onClick={() =>
                         dispatch(
@@ -282,9 +277,9 @@ const ArabProducts = () => {
                           })
                         )
                       }
-                      className={`w-1/2 py-3 rounded-xl font-semibold transition-all duration-200 ${
+                      className={`flex-1 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center ${
                         product.inStock
-                          ? "bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg"
+                          ? "bg-orange-500 text-white hover:bg-orange-700 hover:shadow-lg"
                           : "bg-gray-100 text-gray-400 cursor-not-allowed"
                       }`}
                       disabled={!product.inStock}
@@ -293,9 +288,9 @@ const ArabProducts = () => {
                     </button>
                     <button
                       onClick={() => navigate(`/product/${product._id}`)}
-                      className="w-1/2 py-3 rounded-xl font-semibold transition-all duration-200 bg-blue-500 text-white hover:bg-blue-600 hover:shadow-lg"
+                      className="px-5 py-3 rounded-xl font-semibold transition-all duration-200 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:shadow-md"
                     >
-                      More Details
+                      Details
                     </button>
                   </div>
                 </div>

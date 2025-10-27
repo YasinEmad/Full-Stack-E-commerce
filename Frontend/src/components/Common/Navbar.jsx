@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShoppingBag, 
   Menu, 
-  X, 
-  Shirt, 
-  Crown, 
+  X,  
   Users, 
   Sparkles,
   User
@@ -88,10 +86,6 @@ const Navbar = () => {
 
             {/* Right Section */}
             <div className="flex items-center space-x-2">
-              <button className="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl text-gray-400 hover:text-orange-600 hover:bg-purple-50 transition-all duration-200">
-                <User className="w-5 h-5" />
-              </button>
-
               {/* Cart Button */}
               <button
                 onClick={() => dispatch(openCart())}

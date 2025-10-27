@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const targetDir = path.join(__dirname, 'src'); // غيرها لو مجلدك مش src
+const targetDir = path.join(__dirname, 'src');
 
 const WHITESPACE_REGEX = /[\u00A0\u200B\u202F]/g;
 
