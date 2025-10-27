@@ -6,9 +6,10 @@ const connectDB = require('./config/db');
 const feedbackRoutes = require('./routes/feedback');
 const app = express();
 
-// Enable CORS for all routes with credentials
+// Configure CORS: in production set FRONTEND_URL to the deployed frontend origin (comma-separated if multiple)
+const FRONTEND_URL = process.env.FRONTEND_URL || '*';
 app.use(cors({
-  origin: '*',
+  origin: process.env.FRONTEND_URL ? FRONTEND_URL.split(',').map(s => s.trim()) : '*',
   credentials: true
 }));
 

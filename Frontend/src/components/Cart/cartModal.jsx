@@ -23,7 +23,8 @@ export default function CartModal({ isOpen, onClose }) {
     setLoading(true);
 
     try {
-     await axios.post("http://localhost:5000/api/orders", formData);
+      const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+      await axios.post(`${API_BASE}/api/orders`, formData);
 
       setFormData({ productName: "", clientName: "", phone: "", address: "" });
       onClose();

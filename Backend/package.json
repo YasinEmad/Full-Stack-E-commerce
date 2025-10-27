@@ -1,12 +1,15 @@
 {
   "name": "learn-express",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "prestart": "node -v | grep -q $(cat .nvmrc) || (echo 'Please use Node.js version' $(cat .nvmrc) && exit 1)",
-    "start": "node index.js",
+    "start": "node server.js",
     "predev": "node -v | grep -q $(cat .nvmrc) || (echo 'Please use Node.js version' $(cat .nvmrc) && exit 1)",
-    "dev": "nodemon index.js",
+    "dev": "nodemon server.js",
     "seed:orders": "node seedOrders.js"
   },
   "dependencies": {
