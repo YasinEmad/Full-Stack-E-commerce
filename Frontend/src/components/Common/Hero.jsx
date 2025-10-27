@@ -1,45 +1,49 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 
 const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative h-screen w-full">
+    // 1. Add `group` for the hover effect and `overflow-hidden` to contain the zoom
+    <section className="relative h-screen w-full group overflow-hidden">
+      {/* Background Image */}
       <img
         src="https://i.pinimg.com/1200x/d2/f6/b1/d2f6b1b524e74589f153c0a8cd1db694.jpg"
         alt="fashion"
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover
+                   transition-transform duration-500 ease-in-out
+                   group-hover:scale-105" // 2. Image zooms on section hover
       />
 
+      {/* 3. Dark Overlay for better text readability */}
+      <div className="absolute inset-0 z-0 bg-black/30"></div>
+
+      {/* Text Content (z-10 ensures it's above the overlay) */}
       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6">
-        <motion.h1
-          initial={{ opacity: 0, y: -40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="text-4xl md:text-6xl font-extrabold text-white leading-tight tracking-tight"
+        <h1
+          className="text-4xl md:text-6xl font-extrabold text-white leading-tight tracking-tight 
+                     animate-fade-in-down delay-200"
         >
           Redefine Your Everyday Look
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9 }}
-          className="text-gray-200 text-lg md:text-xl mt-4 max-w-2xl"
+        <p
+          className="text-gray-200 text-lg md:text-xl mt-4 max-w-2xl 
+                     animate-fade-in-up delay-500"
         >
           Step into the season with confidence. Explore premium designs made for comfort and style.
-        </motion.p>
+        </p>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+        <button
           onClick={() => navigate('/categories')}
-          className="mt-10 bg-[#fc9e11] text-black font-semibold py-3 px-10 rounded-full shadow-md hover:bg-[#c97900] transition-all duration-300"
+          className="mt-10 bg-[#fc9e11] text-black font-semibold py-3 px-10 rounded-full shadow-md 
+                     hover:bg-[#c97900] transition-all duration-300 hover:scale-105 active:scale-95 
+                     animate-fade-in-up delay-700 
+                     animate-pulse [animation-delay:1200ms] [animation-duration:2s]" // 4. Added a delayed, slower pulse
         >
           Explore Collections
-        </motion.button>
+        </button>
       </div>
     </section>
   );
