@@ -1,17 +1,43 @@
 {
   "version": 2,
-  "public": true,
-  "buildCommand": "cd Frontend && npm install && npm run build",
-  "installCommand": "npm install && cd Backend && npm install",
-  "outputDirectory": "Frontend/dist",
-  "rewrites": [
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/Backend/server.js"
+      "src": "Backend/server.js",
+      "use": "@vercel/node",
+      "config": { "nodeVersion": "20.x" }
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "Frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "Backend/server.js"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "Frontend/dist/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "Frontend/dist/$1",
+      "check": true
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "dest": "Frontend/dist/index.html"
+    }
+  ],
+  "functions": {
+    "Backend/server.js": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  }
 }

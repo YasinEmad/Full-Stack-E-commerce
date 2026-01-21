@@ -14,8 +14,30 @@ const { router: orderAuthRoutes } = require('./routes/orderAuth');
 
 const app = express();
 
-// 1. Connect to DB
-connectDB();
+// 0. Initialize DB connection (for Vercel serverless)
+let dbConnected = false;
+
+// Function to ensure DB is connected
+const ensureDBConnection = async () => {
+  if (!dbConnected) {
+    try {
+      await connectDB();
+      dbConnected = true;
+    } catch (error) {
+      console.error('Failed to connect to database:', error.message);
+      // Don't exit - let the request handler deal with it
+    }
+  }
+};
+
+// Middleware to ensure DB connection before each request
+app.use(async (req, res, next) => {
+  await ensureDBConnection();
+  next();
+});
+
+// 1. Connect to DB (initial attempt)
+ensureDBConnection().catch(err => console.error('Initial DB connection failed:', err.message));
 
 // 2. Configure CORS
 const FRONTEND_URL = process.env.FRONTEND_URL || '*';
@@ -40,8 +62,28 @@ app.use('/api/orders/auth', orderAuthRoutes);
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Welcome to the E-commerce API',
-    status: 'Running'
+    status: 'Running',
+    environment: process.env.NODE_ENV || 'development',
+    database: dbConnected ? 'Connected' : 'Connecting...'
   });
+});
+
+// Health check endpoint for Vercel
+app.get('/api/health', async (req, res) => {
+  try {
+    await ensureDBConnection();
+    res.status(200).json({ 
+      status: 'OK',
+      database: dbConnected ? 'Connected' : 'Connecting',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(503).json({ 
+      status: 'Service Unavailable',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // 5. Server Handling for Local vs Production
