@@ -5,12 +5,17 @@
   "outputDirectory": "Frontend/dist",
   "cleanUrls": true,
   "trailingSlash": false,
-  "functions": {
-    "Backend/*.js": {
-      "maxDuration": 30,
-      "memory": 1024
+  "builds": [
+    {
+      "src": "Backend/server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "Frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
     }
-  },
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -20,8 +25,5 @@
       "source": "/((?!api|_vercel).*)",
       "destination": "/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
