@@ -4,7 +4,11 @@
     {
       "src": "Backend/server.js",
       "use": "@vercel/node",
-      "config": { "nodeVersion": "20.x" }
+      "config": { 
+        "nodeVersion": "20.x",
+        "maxDuration": 60,
+        "memory": 1024
+      }
     },
     {
       "src": "Frontend/package.json",
@@ -33,11 +37,5 @@
       "src": "/.*",
       "dest": "Frontend/dist/index.html"
     }
-  ],
-  "functions": {
-    "Backend/server.js": {
-      "maxDuration": 60,
-      "memory": 1024
-    }
-  }
+  ]
 }
