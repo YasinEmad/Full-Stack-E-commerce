@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  ShoppingBag, 
-  Menu, 
-  X,  
-  Users, 
-  Sparkles,
-  User
-} from 'lucide-react';
-import { useSelector, useDispatch } from 'react-redux';
-import { openCart } from '../../redux/cartSlice';
-import CartDrawer from '../Cart/CartDrawer';
-import { Cpu, Globe2 } from 'lucide-react';
-
+import React, { useState, useEffect } from "react";
+import { ShoppingBag, Menu, X, Users, Sparkles, User } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { openCart } from "../../redux/cartSlice";
+import CartDrawer from "../Cart/CartDrawer";
+import { Cpu, Globe2 } from "lucide-react";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -21,54 +13,55 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
- const navItems = [
-  { title: 'Collections', icon: Sparkles, href: '/categories' },
-  { title: 'Tech', icon: Cpu, href: '/tech' },
-  { title: 'Arab', icon: Globe2, href: '/arab' },
-  { title: 'About', icon: Users, href: '/about' }
-];
-
+  const navItems = [
+    { title: "Collections", icon: Sparkles, href: "/categories" },
+    { title: "Tech", icon: Cpu, href: "/tech" },
+    { title: "Arab", icon: Globe2, href: "/arab" },
+    { title: "About", icon: Users, href: "/about" },
+  ];
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-lg shadow-lg'
-          : 'bg-white shadow-md'
-      }`}>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-white/95 backdrop-blur-lg shadow-lg"
+            : "bg-white shadow-md"
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-12 lg:h-14">
-
             {/* Logo */}
-        <div className="relative flex items-center gap-2">
-  <div className="w-10 h-10 rounded-2xl overflow-hidden flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 shadow-lg">
-    <img 
-      src="/ecommerce-svgrepo-com.svg" 
-      alt="Logo"
-      className="w-full h-full object-contain"
-    />
-  </div>
+            <div
+              onClick={() => (window.location.href = "/")}
+              className="relative flex items-center gap-3 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-2xl overflow-hidden flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <img
+                  src="/ecommerce-svgrepo-com.svg"
+                  alt="Logo"
+                  className="w-full h-full object-contain"
+                />
+              </div>
 
-  <div className="hidden sm:block leading-tight">
-  <span className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-orange-300 to-orange-400 bg-clip-text text-transparent">
-    ARAB
-  </span>
+              <div className="hidden sm:block leading-tight">
+                <span className="text-2xl lg:text-3xl font-extrabold tracking-wider bg-gradient-to-r from-orange-300 to-orange-400 bg-clip-text text-transparent">
+                  ARAB
+                </span>
 
-  <span className="text-lg font-bold text-gray-800 block -mt-1">
-    Tech
-  </span>
-</div>
-</div>
-
-
+                <span className="text-xl lg:text-1xl font-bold text-gray-900 block -mt-1">
+                  Tech
+                </span>
+              </div>
+            </div>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-1">
