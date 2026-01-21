@@ -6,7 +6,6 @@
   "trailingSlash": false,
   "functions": {
     "Backend/server.js": {
-      "runtime": "nodejs20.x",
       "maxDuration": 30,
       "memory": 1024
     }
@@ -14,7 +13,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/Backend/server.js"
+      "destination": "Backend/server.js"
     },
     {
       "source": "/((?!api|_vercel).*)",
@@ -26,11 +25,11 @@
   },
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=3600, s-maxage=3600"
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     },
