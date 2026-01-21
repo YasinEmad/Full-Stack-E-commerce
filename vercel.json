@@ -2,7 +2,6 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install && cd Backend && npm install && cd ../Frontend && npm install",
   "outputDirectory": "Frontend/dist",
-  "framework": "react",
   "cleanUrls": true,
   "trailingSlash": false,
   "builds": [
