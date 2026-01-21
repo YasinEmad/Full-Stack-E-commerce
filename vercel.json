@@ -21,8 +21,7 @@
       "destination": "Backend/server.js"
     },
     {
-      "source": "/static/(.*)",
-      "destination": "Frontend/dist/static/$1"
+      "handle": "filesystem"
     },
     {
       "source": "/(.*)",
