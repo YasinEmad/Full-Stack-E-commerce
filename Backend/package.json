@@ -6,9 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "prestart": "node -v | grep -q $(cat .nvmrc) || (echo 'Please use Node.js version' $(cat .nvmrc) && exit 1)",
     "start": "node server.js",
-    "predev": "node -v | grep -q $(cat .nvmrc) || (echo 'Please use Node.js version' $(cat .nvmrc) && exit 1)",
     "dev": "nodemon server.js",
     "seed:orders": "node seedOrders.js"
   },

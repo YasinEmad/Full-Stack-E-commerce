@@ -1,31 +1,47 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build:frontend",
   "installCommand": "npm install && cd Backend && npm install && cd ../Frontend && npm install",
   "outputDirectory": "Frontend/dist",
   "cleanUrls": true,
   "trailingSlash": false,
-  "builds": [
-    {
-      "src": "Backend/server.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "Frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
+  "functions": {
+    "Backend/server.js": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 30,
+      "memory": 1024
     }
-  ],
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "Backend/server.js"
+      "destination": "/Backend/server.js"
     },
     {
-      "source": "/((?!api/).*)",
+      "source": "/((?!api|_vercel).*)",
       "destination": "/index.html"
     }
   ],
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=3600"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    }
+  ]
 }

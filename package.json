@@ -10,11 +10,10 @@
     "dev": "npm run dev:backend & npm run dev:frontend",
     "dev:backend": "cd Backend && npm run dev",
     "dev:frontend": "cd Frontend && npm run dev",
-    "build": "npm run build:frontend",
-    "build:backend": "echo 'Backend ready'",
     "build:frontend": "cd Frontend && npm install && npm run build",
+    "build": "npm run build:frontend",
     "start": "cd Backend && node server.js",
-    "vercel-build": "npm run build:frontend"
+    "vercel-build": "cd Frontend && npm install && npm run build"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.0",
