@@ -1,11 +1,12 @@
 {
+  "version": 2,
   "buildCommand": "npm run build:frontend",
   "installCommand": "npm install && cd Backend && npm install && cd ../Frontend && npm install",
   "outputDirectory": "Frontend/dist",
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "Backend/server.js": {
+    "Backend/*.js": {
       "maxDuration": 30,
       "memory": 1024
     }
@@ -22,25 +23,5 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
-    }
-  ]
+  }
 }
