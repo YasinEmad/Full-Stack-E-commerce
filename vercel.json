@@ -21,11 +21,8 @@
       "destination": "Backend/server.js"
     },
     {
-      "handle": "filesystem"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "Frontend/dist/index.html"
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ],
   "env": {
