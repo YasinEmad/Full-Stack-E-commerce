@@ -3,8 +3,6 @@
   "buildCommand": "npm run build:frontend",
   "installCommand": "npm install && cd Backend && npm install && cd ../Frontend && npm install",
   "outputDirectory": "Frontend/dist",
-  "cleanUrls": true,
-  "trailingSlash": false,
   "builds": [
     {
       "src": "Backend/server.js",
