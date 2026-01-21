@@ -48,24 +48,27 @@ const Navbar = () => {
           <div className="flex justify-between items-center h-12 lg:h-14">
 
             {/* Logo */}
-            <div className="flex items-center">
-              <a href="/" className="group flex items-center space-x-3">
-                <div className="relative">
-                  <div className="w-10 h-10 bg-gradient-to-br from-orange-300 to-orange-400 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                    <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 7h-3V6a4 4 0 0 0-8 0v1H5a1 1 0 0 0-1 1v11a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V8a1 1 0 0 0-1-1zM10 6a2 2 0 0 1 4 0v1h-4V6zm8 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9h2v1a1 1 0 0 0 2 0V9h4v1a1 1 0 0 0 2 0V9h2v10z"/>
-                      <path d="m10.7 13.7 1.6 1.6 3.9-3.9c.4-.4 1-.4 1.4 0s.4 1 0 1.4l-4.6 4.6c-.4.4-1 .4-1.4 0l-2.3-2.3c-.4-.4-.4-1 0-1.4s1-.4 1.4 0z"/>
-                    </svg>
-                  </div>
-                </div>
-                <div className="hidden sm:block">
-                  <span className="text-2xl font-bold bg-gradient-to-r from-orange-300 to-orange-400 bg-clip-text text-transparent">
-                    ARAB
-                  </span>
-                  <span className="text-sm text-black-500 font-bold block -mt-1">Tech</span>
-                </div>
-              </a>
-            </div>
+        <div className="relative flex items-center gap-2">
+  <div className="w-10 h-10 rounded-2xl overflow-hidden flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 shadow-lg">
+    <img 
+      src="/ecommerce-svgrepo-com.svg" 
+      alt="Logo"
+      className="w-full h-full object-contain"
+    />
+  </div>
+
+  <div className="hidden sm:block leading-tight">
+  <span className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-orange-300 to-orange-400 bg-clip-text text-transparent">
+    ARAB
+  </span>
+
+  <span className="text-lg font-bold text-gray-800 block -mt-1">
+    Tech
+  </span>
+</div>
+</div>
+
+
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-1">
