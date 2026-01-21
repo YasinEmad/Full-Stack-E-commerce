@@ -1,26 +1,16 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:frontend",
-  "installCommand": "npm install && cd Backend && npm install && cd ../Frontend && npm install",
+  "public": true,
+  "buildCommand": "cd Frontend && npm install && npm run build",
+  "installCommand": "npm install && cd Backend && npm install",
   "outputDirectory": "Frontend/dist",
-  "builds": [
-    {
-      "src": "Backend/server.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "Frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "Backend/server.js"
+      "destination": "/Backend/server.js"
     },
     {
-      "source": "/((?!api|_vercel).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
