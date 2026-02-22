@@ -170,6 +170,14 @@ export default function AdminLogin() {
                   'Sign In'
                 )}
               </button>
+              {/* Return to Website Button */}
+              <button
+                type="button"
+                onClick={() => navigate("/")}
+                className="w-full mt-4 py-3 px-4 rounded-lg font-bold text-orange-600 border-2 border-orange-500 bg-white hover:bg-orange-50 transition-all duration-300"
+              >
+                Return to Website
+              </button>
             </form>
 
             {/* Footer Info */}
