@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../redux/cartSlice";
+import { useNotification } from '../context/NotificationContext';
 import { fetchProductsByCategory } from "../redux/productSlice";
 import { ofArab } from "../hooks/useFilterProduct";
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
@@ -9,6 +10,7 @@ import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 const ArabProducts = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
 
   const {
     items: products,
@@ -266,7 +268,7 @@ const ArabProducts = () => {
 
                   <div className="flex space-x-2">
                     <button
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
                           addToCart({
                             id: product._id,
@@ -275,8 +277,9 @@ const ArabProducts = () => {
                             image: product.image,
                             description: product.description,
                           })
-                        )
-                      }
+                        );
+                        showNotification(`Added ${product.name} to cart!`, 'success');
+                      }}
                       className={`flex-1 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center ${
                         product.inStock
                           ? "bg-orange-500 text-white hover:bg-orange-700 hover:shadow-lg"

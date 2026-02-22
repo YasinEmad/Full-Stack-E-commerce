@@ -1,15 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useNotification } from '../context/NotificationContext';
+import { Lock, Mail, Shield } from 'lucide-react';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
+    
     try {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
@@ -17,55 +23,163 @@ export default function AdminLogin() {
         body: JSON.stringify({ username, password })
       });
       const data = await res.json();
+      
       if (res.ok) {
-        // The token will be set as an HTTP-only cookie by the backend
-        navigate('/admin/dashboard');
+        showNotification('Login successful! Redirecting...', 'success');
+        setTimeout(() => {
+          navigate('/admin/dashboard');
+        }, 1000);
       } else {
-        setError(data.error || 'Login failed');
+        const errorMsg = data.error || 'Login failed. Please try again.';
+        setError(errorMsg);
+        showNotification(errorMsg, 'error');
       }
-    } catch {
-      setError('Server error');
+    } catch (err) {
+      const errorMsg = 'Server error. Please try again later.';
+      setError(errorMsg);
+      showNotification(errorMsg, 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div 
-      className="flex items-center justify-center min-h-screen bg-cover bg-center" 
-      style={{ backgroundImage: "url('https://plus.unsplash.com/premium_photo-1677995700941-100976883af7?q=80&w=923&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}
+      className="flex items-center justify-center min-h-screen bg-cover bg-center relative overflow-hidden" 
+      style={{ backgroundImage: "url('https://i.pinimg.com/736x/b3/15/52/b315527f272a1a00df44206a286308b7.jpg')" }}
     >
-      <div className="w-full max-w-md p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Admin Login</h2>
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+      {/* Login Container - Horizontal Layout */}
+      <div className="relative z-10 w-full max-w-5xl mx-4 flex rounded-3xl shadow-2xl overflow-hidden bg-white">
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-          />
+        {/* Left Side - Branding & Features */}
+        <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-orange-500 to-orange-600 p-12 flex-col justify-center text-white">
+          <div className="mb-8">
+            <div className="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
+              <Shield className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-4xl font-bold mb-3">Admin Portal</h1>
+            <p className="text-orange-100 text-lg">Secure access to your dashboard</p>
+          </div>
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-          />
+          <div className="space-y-6">
+            <div className="flex items-start gap-4">
+              <div className="mt-1">
+                <Shield className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-1">Secure Authentication</h3>
+                <p className="text-orange-100">Protected with industry-standard encryption</p>
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            className="w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition"
-          >
-            Login
-          </button>
+            <div className="flex items-start gap-4">
+              <div className="mt-1">
+                <Lock className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-1">Data Protection</h3>
+                <p className="text-orange-100">Your credentials are always safe with us</p>
+              </div>
+            </div>
 
-          {error && (
-            <div className="text-red-600 text-center mt-2 text-sm">{error}</div>
-          )}
-        </form>
+            <div className="flex items-start gap-4">
+              <div className="mt-1">
+                <Mail className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-1">Session Management</h3>
+                <p className="text-orange-100">Automatic session timeout for security</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side - Login Form */}
+        <div className="w-full lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
+            <p className="text-gray-500 mb-8">Sign in to access your admin dashboard</p>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Email Input */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-4 w-5 h-5 text-gray-400" />
+                  <input
+                    type="email"
+                    placeholder="admin@example.com"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none transition-colors duration-200 bg-gray-50 hover:bg-white"
+                  />
+                </div>
+              </div>
+
+              {/* Password Input */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-4 w-5 h-5 text-gray-400" />
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none transition-colors duration-200 bg-gray-50 hover:bg-white"
+                  />
+                </div>
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4 flex items-start gap-3">
+                  <span className="text-red-600 font-bold text-xl flex-shrink-0">!</span>
+                  <div>
+                    <p className="text-red-800 font-semibold text-sm">Login Error</p>
+                    <p className="text-red-700 text-sm mt-1">{error}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Login Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full py-3 px-4 rounded-lg font-bold text-white transition-all duration-300 transform ${
+                  loading
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-orange-500 to-orange-600 hover:shadow-lg hover:from-orange-600 hover:to-orange-700 active:scale-95'
+                }`}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Signing in...
+                  </span>
+                ) : (
+                  'Sign In'
+                )}
+              </button>
+            </form>
+
+            {/* Footer Info */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <p className="text-center text-gray-600 text-xs">
+                By signing in, you agree to our Terms of Service and Privacy Policy
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../redux/cartSlice";
+import { useNotification } from '../context/NotificationContext';
 import { fetchProducts } from "../redux/productSlice";
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 import { ofTech } from "../hooks/useFilterProduct";
@@ -16,6 +17,7 @@ const TechProducts = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { showNotification } = useNotification();
 
   // redux products state
   const {
@@ -298,7 +300,7 @@ const TechProducts = () => {
                   {/* Button Actions (pushed to the bottom) */}
                   <div className="flex space-x-2">
                     <button
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
                           addToCart({
                             id: product._id,
@@ -307,8 +309,9 @@ const TechProducts = () => {
                             image: product.image,
                             description: product.description,
                           })
-                        )
-                      }
+                        );
+                        showNotification(`Added ${product.name} to cart!`, 'success');
+                      }}
                       className={`flex-1 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center ${
                         product.inStock
                           ? "bg-orange-500 text-white hover:bg-orange-700 hover:shadow-lg"

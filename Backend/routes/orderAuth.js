@@ -4,20 +4,20 @@ require('dotenv').config();
 
 const router = express.Router();
 
-const ORDER_EMAIL = process.env.ORDER_EMAIL;
-const ORDER_PASSWORD = process.env.ORDER_PASSWORD;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// Login route for orders management
+// Login route for orders management (now uses admin credentials)
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  if (!ORDER_EMAIL || !ORDER_PASSWORD || !JWT_SECRET) {
+  if (!ADMIN_EMAIL || !ADMIN_PASSWORD || !JWT_SECRET) {
     return res.status(500).json({ error: 'Server configuration error' });
   }
 
-  if (username === ORDER_EMAIL && password === ORDER_PASSWORD) {
-    const token = jwt.sign({ role: 'order', email: ORDER_EMAIL }, JWT_SECRET, { expiresIn: '2h' });
+  if (username === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    const token = jwt.sign({ role: 'order', email: ADMIN_EMAIL }, JWT_SECRET, { expiresIn: '2h' });
 
     res.cookie('orderToken', token, {
       httpOnly: true,
@@ -32,15 +32,39 @@ router.post('/login', (req, res) => {
   return res.status(401).json({ error: 'Invalid credentials' });
 });
 
-// Middleware to verify order token
+// Middleware to verify order token or admin token
 function verifyOrderToken(req, res, next) {
-  const token = req.cookies.orderToken;
-  if (!token) return res.status(401).json({ error: 'No token provided' });
+  const orderToken = req.cookies.orderToken;
+  const adminToken = req.cookies.adminToken;
+  if (!orderToken && !adminToken) return res.status(401).json({ error: 'No token provided' });
 
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err || user.role !== 'order') return res.status(403).json({ error: 'Invalid token' });
-    req.orderUser = user;
-    next();
+  // Try order token first
+  if (orderToken) {
+    return jwt.verify(orderToken, JWT_SECRET, (err, user) => {
+      if (!err && user.role === 'order') {
+        req.orderUser = user;
+        return next();
+      }
+      // If order token fails, try admin token
+      if (adminToken) {
+        return jwt.verify(adminToken, JWT_SECRET, (err2, adminUser) => {
+          if (!err2 && adminUser.role === 'admin') {
+            req.orderUser = adminUser;
+            return next();
+          }
+          return res.status(403).json({ error: 'Invalid token' });
+        });
+      }
+      return res.status(403).json({ error: 'Invalid token' });
+    });
+  }
+  // If only admin token exists
+  jwt.verify(adminToken, JWT_SECRET, (err, adminUser) => {
+    if (!err && adminUser.role === 'admin') {
+      req.orderUser = adminUser;
+      return next();
+    }
+    return res.status(403).json({ error: 'Invalid token' });
   });
 }
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from '../redux/cartSlice';
+import { useNotification } from '../context/NotificationContext';
 import { fetchProducts } from '../redux/productSlice';
 import { Search, Filter, Star, ShoppingBag, Tag } from "lucide-react";
 import { ofCategories } from "../hooks/useFilterProduct";
@@ -16,6 +17,7 @@ const AllProducts = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { showNotification } = useNotification();
 
   // Get products from Redux store
   const { items: allProducts = [], status, error } = useSelector((state) => state.products || {});
@@ -299,7 +301,7 @@ const AllProducts = () => {
                   </div>
                   <div className="flex mt-4 space-x-2">
                     <button
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
                           addToCart({
                             id: product._id,
@@ -308,8 +310,9 @@ const AllProducts = () => {
                             image: product.image,
                             description: product.description,
                           })
-                        )
-                      }
+                        );
+                        showNotification(`Added ${product.name} to cart!`, 'success');
+                      }}
                       className={`w-1/2 py-3 rounded-xl font-semibold transition-all duration-200 ${
                         product.inStock
                           ? "bg-orange-500 text-white hover:bg-orange-700 hover:shadow-lg"
