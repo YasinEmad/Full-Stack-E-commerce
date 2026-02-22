@@ -134,8 +134,8 @@ const Orders = () => {
                             className="flex items-center justify-center min-h-screen bg-cover bg-center" 
                             style={{ backgroundImage: "url('https://plus.unsplash.com/premium_photo-1677995700941-100976883af7?q=80&w=923&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}
                         >
-                            <div className="w-full max-w-md p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl">
-                                <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Orders Login</h2>
+                            <div className="w-full max-w-md p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border-2 border-orange-300">
+                                <h2 className="text-2xl font-bold text-center text-orange-600 mb-6">Orders Login</h2>
                                 <form onSubmit={handleLoginSubmit} className="space-y-4">
                                     <input
                                         type="email"
@@ -143,7 +143,7 @@ const Orders = () => {
                                         value={loginEmail}
                                         onChange={(e) => setLoginEmail(e.target.value)}
                                         required
-                                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                        className="w-full px-4 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                                     />
 
                                     <input
@@ -152,19 +152,19 @@ const Orders = () => {
                                         value={loginPassword}
                                         onChange={(e) => setLoginPassword(e.target.value)}
                                         required
-                                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                        className="w-full px-4 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                                     />
 
                                     <button
                                         type="submit"
-                                        className="w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition"
+                                        className="w-full py-2 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition"
                                         disabled={loginLoading}
                                     >
                                         {loginLoading ? 'Logging in...' : 'Login'}
                                     </button>
 
                                     {loginError && (
-                                        <div className="text-red-600 text-center mt-2 text-sm">{loginError}</div>
+                                        <div className="text-orange-600 text-center mt-2 text-sm">{loginError}</div>
                                     )}
                                 </form>
                             </div>
@@ -175,27 +175,27 @@ const Orders = () => {
 
     return (
         <div className="container mx-auto px-2 py-8">
-            <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-                <h1 className="text-4xl font-extrabold mb-8 text-gray-800 text-center tracking-tight">Orders</h1>
+            <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-6 border-2 border-orange-200">
+                <h1 className="text-4xl font-extrabold mb-8 text-orange-600 text-center tracking-tight">Orders</h1>
                 <div className="overflow-x-auto rounded-lg">
-                    <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                    <table className="min-w-full bg-white border-2 border-orange-200 rounded-lg">
                         <thead>
-                            <tr className="bg-gradient-to-r from-gray-100 to-gray-200 sticky top-0 z-10">
-                                <th className="py-4 px-4 border-b font-semibold text-gray-700">Order ID</th>
-                                <th className="py-4 px-4 border-b font-semibold text-gray-700">Product Name</th>
-                                <th className="py-4 px-4 border-b font-semibold text-gray-700">Client Name</th>
-                                <th className="py-4 px-4 border-b font-semibold text-gray-700">Address</th>
-                                <th className="py-4 px-4 border-b font-semibold text-gray-700">Phone</th>
-                                <th className="py-4 px-4 border-b font-semibold text-gray-700">Delivered</th>
-                                <th className="py-4 px-4 border-b font-semibold text-gray-700">Actions</th>
-                                <th className="py-4 px-4 border-b font-semibold text-gray-700">Date</th>
+                            <tr className="bg-gradient-to-r from-orange-100 to-orange-200 sticky top-0 z-10">
+                                <th className="py-4 px-4 border-b font-semibold text-orange-700">Order ID</th>
+                                <th className="py-4 px-4 border-b font-semibold text-orange-700">Product Name</th>
+                                <th className="py-4 px-4 border-b font-semibold text-orange-700">Client Name</th>
+                                <th className="py-4 px-4 border-b font-semibold text-orange-700">Address</th>
+                                <th className="py-4 px-4 border-b font-semibold text-orange-700">Phone</th>
+                                <th className="py-4 px-4 border-b font-semibold text-orange-700">Delivered</th>
+                                <th className="py-4 px-4 border-b font-semibold text-orange-700">Actions</th>
+                                <th className="py-4 px-4 border-b font-semibold text-orange-700">Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             {orders.map((order) => (
                                 <tr
                                     key={order._id}
-                                    className={`transition-colors duration-200 ${order.delivered ? 'bg-green-50' : 'bg-white'} hover:bg-blue-50`}
+                                    className={`transition-colors duration-200 ${order.delivered ? 'bg-orange-50' : 'bg-white'} hover:bg-orange-100`}
                                 >
                                     <td className="py-3 px-4 border-b text-sm font-mono">{order.orderId}</td>
                                     <td className="py-3 px-4 border-b text-sm">{order.productName}</td>
@@ -203,22 +203,30 @@ const Orders = () => {
                                     <td className="py-3 px-4 border-b text-sm">{order.address}</td>
                                     <td className="py-3 px-4 border-b text-sm">{order.phone}</td>
                                     <td className="py-3 px-4 border-b text-center">
-                                        <span className={`inline-flex items-center gap-2 px-2 py-1 rounded text-xs font-semibold ${order.delivered ? 'bg-green-200 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                        <span className={`inline-flex items-center gap-2 px-2 py-1 rounded text-xs font-semibold ${order.delivered ? 'bg-orange-200 text-orange-800' : 'bg-orange-100 text-orange-700'}`}>
                                             <input
                                                 type="checkbox"
                                                 checked={!!order.delivered}
                                                 onChange={() => handleToggleDelivered(order)}
                                                 aria-label={`Mark order ${order.orderId} delivered`}
                                                 disabled={actionLoading}
-                                                className="accent-green-600 w-4 h-4 mr-1"
+                                                className="accent-orange-600 w-4 h-4 mr-1"
                                             />
-                                            {order.delivered ? 'Delivered' : 'Pending'}
+                                            {order.delivered ? 'Delivered' : (
+                                                <button
+                                                    className="px-3 py-1 bg-orange-600 text-white rounded-lg font-semibold shadow-sm hover:bg-orange-700 transition"
+                                                    onClick={() => handleToggleDelivered(order)}
+                                                    disabled={actionLoading}
+                                                >
+                                                    Confirm Order
+                                                </button>
+                                            )}
                                         </span>
                                     </td>
                                     <td className="py-3 px-4 border-b text-center">
                                         <button
                                             onClick={() => handleDelete(order._id)}
-                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow-sm transition flex items-center gap-2 mx-auto"
+                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow-sm transition flex items-center gap-2 mx-auto border border-red-300"
                                             disabled={actionLoading}
                                             title="Delete order"
                                         >
@@ -226,7 +234,7 @@ const Orders = () => {
                                             <span className="hidden sm:inline">Delete</span>
                                         </button>
                                     </td>
-                                    <td className="py-3 px-4 border-b text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
+                                    <td className="py-3 px-4 border-b text-sm text-orange-500">{new Date(order.createdAt).toLocaleDateString()}</td>
                                 </tr>
                             ))}
                         </tbody>
